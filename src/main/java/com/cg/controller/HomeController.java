@@ -9,4 +9,14 @@ public class HomeController {
         return "login";
     }
 
+    @GetMapping("/home")
+    public String showHomePage() {
+        return "home";
+    }
+
+    @GetMapping("/dashboard")
+    public String showDashboardPage() {
+        return "dashboard";
+    }
+
 }

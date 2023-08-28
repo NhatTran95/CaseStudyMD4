@@ -94,7 +94,7 @@ public class AuthAPI {
             JwtResponse jwtResponse = new JwtResponse(
                     jwt,
                     userOptional.get().getId(),
-                    userDetails.getUsername(),
+                    userOptional.get().getUsername(),
                     userOptional.get().getUsername(),
                     userDetails.getAuthorities()
             );

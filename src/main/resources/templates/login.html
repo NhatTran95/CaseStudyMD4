@@ -156,7 +156,8 @@
             data: JSON.stringify(obj)
         })
             .done((data) => {
-                alert('dang nhap thanh cong')
+                console.log("Login success")
+                location.href = '/customers'
             })
             .fail((error) => {
                 console.log(error);

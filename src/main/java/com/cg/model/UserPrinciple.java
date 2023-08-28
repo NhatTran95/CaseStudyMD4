@@ -17,17 +17,17 @@ public class UserPrinciple implements UserDetails {
     private final Long id;
 
     private final String phone;
-    private final String fullName;
+    private final String username;
     private final String password;
 
     private final Collection<? extends GrantedAuthority> roles;
 
     private final String role;
 
-    public UserPrinciple(Long id, String phone, String fullName, String password, Collection<? extends GrantedAuthority> roles, EUserRole role) {
+    public UserPrinciple(Long id, String phone, String username, String password, Collection<? extends GrantedAuthority> roles, EUserRole role) {
         this.id = id;
         this.phone = phone;
-        this.fullName = fullName;
+        this.username = username;
         this.password = password;
         this.roles = roles;
         this.role = role.getValue();
@@ -58,7 +58,7 @@ public class UserPrinciple implements UserDetails {
     }
 
     public String getFullName() {
-        return fullName;
+        return username;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class UserPrinciple implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
+        return username;
     }
 
     @Override
