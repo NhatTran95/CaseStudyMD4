@@ -1,0 +1,85 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" class="no-js" lang="zxx">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title> Barber HTML-5 Template </title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
+
+  <!-- CSS here -->
+  <th:block th:replace="layout/css" />
+</head>
+<body>
+<!-- ? Preloader Start -->
+
+  <th:block th:replace="layout/navbar-portfolio" />
+  <!-- Header End -->
+
+<main>
+  <!--? Hero Start -->
+  <div class="slider-area2">
+    <div class="slider-height2 d-flex align-items-center">
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-12">
+            <div class="hero-cap hero-cap2 pt-70 text-center">
+              <h2>Portfolio</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Hero End -->
+  <!--? Gallery Area Start -->
+  <div class="gallery-area section-padding30">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-6">
+          <div class="box snake mb-30">
+            <div class="gallery-img " style="background-image: url(/assets/img/gallery/gallery1.png);"></div>
+            <div class="overlay"></div>
+          </div>
+        </div>
+        <div class="col-lg-8 col-md-6 col-sm-6">
+          <div class="box snake mb-30">
+            <div class="gallery-img " style="background-image: url(/assets/img/gallery/gallery2.png);"></div>
+            <div class="overlay"></div>
+          </div>
+        </div>
+        <div class="col-lg-8 col-md-6 col-sm-6">
+          <div class="box snake mb-30">
+            <div class="gallery-img " style="background-image: url(/assets/img/gallery/gallery3.png);"></div>
+            <div class="overlay"></div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-6">
+          <div class="box snake mb-30">
+            <div class="gallery-img " style="background-image: url(/assets/img/gallery/gallery4.png);"></div>
+            <div class="overlay"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Gallery Area End -->
+</main>
+<footer>
+  <!--? Footer Start-->
+  <th:block th:replace="layout/footer" />
+  <!-- Footer End-->
+</footer>
+<!-- Scroll Up -->
+<div id="back-top" >
+  <a title="Go to Top" href="#"> <i class="fas fa-level-up-alt"></i></a>
+</div>
+
+<!-- JS here -->
+
+<th:block th:replace="layout/js" />
+
+</body>
+</html>
