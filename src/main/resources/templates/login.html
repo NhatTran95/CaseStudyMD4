@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/assets/web-toast/src/webToast.css">
     <link rel="stylesheet" href="/assets/css/login.css">
 
-    <title>Ludiflex | Login & Registration</title>
+    <title>Login & Registration</title>
 </head>
 
 <body>
@@ -156,8 +156,10 @@
             data: JSON.stringify(obj)
         })
             .done((data) => {
+
                 console.log("Login success")
                 location.href = '/customers'
+
             })
             .fail((error) => {
                 console.log(error);

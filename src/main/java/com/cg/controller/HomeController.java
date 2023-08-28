@@ -8,15 +8,10 @@ public class HomeController {
     public String showLoginPage() {
         return "login";
     }
-
     @GetMapping("/home")
     public String showHomePage() {
-        return "home";
+        return "views/index";
     }
 
-    @GetMapping("/dashboard")
-    public String showDashboardPage() {
-        return "dashboard";
-    }
 
 }
