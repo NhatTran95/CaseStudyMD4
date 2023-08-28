@@ -10,6 +10,10 @@ $("#login-box-link").click(function(){
     $("#register").fadeOut(100);
     $("#login-box-link").addClass("active");
     $("#signup-box-link").removeClass("active");
+<<<<<<< HEAD
 });
 
 //nav
+=======
+});
+>>>>>>> nhat_dev

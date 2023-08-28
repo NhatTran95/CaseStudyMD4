@@ -94,9 +94,12 @@ public class AuthAPI {
             JwtResponse jwtResponse = new JwtResponse(
                     jwt,
                     userOptional.get().getId(),
+
                     userOptional.get().getUsername(),
-                    userOptional.get().getUsername(),
+
+                    userDetails.getUsername(),
                     userDetails.getAuthorities()
+
             );
 
             ResponseCookie springCookie = ResponseCookie.from("JWT", jwt)

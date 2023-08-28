@@ -12,6 +12,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "stylists")
+
 public class Stylist extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

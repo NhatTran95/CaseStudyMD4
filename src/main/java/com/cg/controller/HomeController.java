@@ -8,6 +8,7 @@ public class HomeController {
     public String showLoginPage() {
         return "login";
     }
+
     @GetMapping("/home")
     public String showHomePage() {
         return "views/index";
@@ -16,6 +17,7 @@ public class HomeController {
     public String showAboutPage() {
         return "services";
     }
+
 
 
 }

@@ -1,6 +1,8 @@
 package com.cg.model;
 
+
 import com.cg.model.dto.CustomerResDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +17,10 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "customers")
+
 public class Customer extends BaseEntity{
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,6 +28,7 @@ public class Customer extends BaseEntity{
     private String fullName;
 
     private String phone;
+
 
     @OneToOne
     @JoinColumn(name = "location_region_id", referencedColumnName = "id", nullable = false)
