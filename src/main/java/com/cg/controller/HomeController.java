@@ -15,9 +15,12 @@ public class HomeController {
     }
     @GetMapping("/about")
     public String showAboutPage() {
-        return "services";
+        return "views/services";
     }
 
-
+    @GetMapping("/booking")
+    public String showBookingPage() {
+        return "views/booking";
+    }
 
 }
