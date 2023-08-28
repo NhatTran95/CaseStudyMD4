@@ -9,4 +9,8 @@ public class HomeController {
         return "login";
     }
 
+    @GetMapping("/booking")
+    public String showBookingPage() {
+        return "booking";
+    }
 }
