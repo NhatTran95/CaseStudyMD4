@@ -1,5 +1,7 @@
 package com.cg.model;
 
+import com.cg.model.dto.CustomerResDTO;
+import com.cg.model.dto.StylistResDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +22,18 @@ public class Stylist extends BaseEntity{
 
     private String stylistName;
 
+    private String phone;
+
     @OneToOne
     @JoinColumn(name = "status_id", referencedColumnName = "id", nullable = false)
     private StylistStatus stylistStatus;
+
+    public StylistResDTO toStylistResDTO() {
+        return new StylistResDTO()
+                .setId(id)
+                .setStylistName(stylistName)
+                .setPhone(phone)
+                .setStylistStatus(stylistStatus)
+                ;
+    }
 }

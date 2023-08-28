@@ -13,9 +13,14 @@ public class HomeController {
     public String showHomePage() {
         return "views/index";
     }
-    @GetMapping("/about")
-    public String showAboutPage() {
-        return "services";
+    @GetMapping("/services")
+    public String showServicesPage() {
+        return "views/services";
+    }
+
+    @GetMapping("/portfolio")
+    public String showPortfolioPage() {
+        return "views/portfolio";
     }
 
 

@@ -3,6 +3,8 @@ class AppBase {
   static API_SERVER = this.DOMAIN_SERVER + '/api';
 
   static API_CUSTOMER = this.API_SERVER + '/customers';
+
+  static API_STYLIST = this.API_SERVER + '/stylists';
 }
 
 class LocationRegion {
