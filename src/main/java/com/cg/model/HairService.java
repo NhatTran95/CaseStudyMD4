@@ -7,6 +7,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,8 +28,8 @@ public class HairService {
 
     private BigDecimal price;
 
-    @ManyToOne
-    @JoinColumn(name = "haircutSchedule_id", referencedColumnName = "id", nullable = false)
-    private HaircutSchedule haircutSchedule;
+    private Date time;
 
+    @OneToMany(mappedBy = "hairService", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<HairServiceBooking> hairServiceBookings = new ArrayList<>() ;
 }

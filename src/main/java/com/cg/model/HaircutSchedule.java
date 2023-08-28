@@ -7,7 +7,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -39,4 +41,6 @@ public class HaircutSchedule extends BaseEntity {
     @JoinColumn(name = "status_id", referencedColumnName = "id", nullable = false)
     private HaircutScheduleStatus status;
 
+    @OneToMany(mappedBy = "haircutSchedule", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<HairServiceBooking> hairServiceBookings = new ArrayList<>();
 }
