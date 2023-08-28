@@ -12,43 +12,29 @@
 
 
     <style>
-        .navbar {
-            height: 80px;
-        }
-
-        .bg-navbar {
-            background-color: #299be4;
-            color: #fff;
-        }
-
-        .d-flex {
-            gap: 5px;
-        }
 
         table thead tr th {
-            background-color: #4caf50 !important;
+            background-color: #d19f68 !important;
             color: #fff !important;
         }
 
-        .toastContainer.toastmiddlecenter {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
 
         .container-fluid {
             --bs-gutter-x: 0;
+
         }
 
         .container-fluid .container-fluid {
             padding: 0 10px;
         }
     </style>
+
+
 </head>
 
 <body>
 
+<!--<th:block th:replace="layout/navbar-home" />-->
 
 <div class="container-fluid">
     <th:block th:replace="customer/header"/>
@@ -82,7 +68,11 @@
 <!-- Modal Update -->
 <th:block th:replace="customer/modalUpdate"/>
 
+<!--<footer>-->
+<!--    <th:block th:replace="layout/footer" />-->
+<!--</footer>-->
 
+<!--<th:block th:replace="layout/js" />-->
 
 <script src="/assets/jquery/jquery-3.5.1.min.js"></script>
 <script src="/assets/jquery/jquery.validate.min.js"></script>
@@ -646,6 +636,8 @@
         page.initializeControlEvent();
     })
 </script>
+
+
 </body>
 
 </html>

@@ -16,6 +16,7 @@ public class HomeController {
 
 
 
+
     @GetMapping("/booking")
     public String showBookingPage() {
         return "views/booking";
@@ -24,6 +25,8 @@ public class HomeController {
     public String showServicePage() {
         return "views/services";
     }
+
+
     @GetMapping("/portfolio")
     public String showPortfolioPage() {
         return "views/portfolio";

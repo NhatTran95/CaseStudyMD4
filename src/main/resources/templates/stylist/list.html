@@ -12,30 +12,13 @@
 
 
     <style>
-        .navbar {
-            height: 80px;
-        }
 
-        .bg-navbar {
-            background-color: #299be4;
-            color: #fff;
-        }
-
-        .d-flex {
-            gap: 5px;
-        }
 
         table thead tr th {
             background-color: #4caf50 !important;
             color: #fff !important;
         }
 
-        .toastContainer.toastmiddlecenter {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
 
         .container-fluid {
             --bs-gutter-x: 0;
@@ -51,7 +34,7 @@
 
 
 <div class="container-fluid">
-    <th:block th:replace="customer/header"/>
+    <th:block th:replace="stylist/header"/>
 
     <div class="content">
         <table class="table table-hover">
@@ -60,14 +43,11 @@
                 <th>#</th>
                 <th>FullName</th>
                 <th>Phone</th>
-                <th>Province</th>
-                <th>District</th>
-                <th>Ward</th>
-                <th>Address</th>
+                <th>Status</th>
                 <th colspan="5" class="text-center">Action</th>
             </tr>
             </thead>
-            <tbody id="tbCustomerBody">
+            <tbody id="tbStylistBody">
 
             <!-- <p>.........content.............</p> -->
 
@@ -77,12 +57,10 @@
 </div>
 
 <!-- Modal Create -->
-<th:block th:replace="customer/modalCreate"/>
+<th:block th:replace="stylist/modalCreate"/>
 
 <!-- Modal Update -->
-<th:block th:replace="customer/modalUpdate"/>
-
-
+<th:block th:replace="stylist/modalUpdate"/>
 
 <script src="/assets/jquery/jquery-3.5.1.min.js"></script>
 <script src="/assets/jquery/jquery.validate.min.js"></script>
@@ -94,10 +72,10 @@
 
     const page = {
         urls: {
-            getAllCustomers: AppBase.API_CUSTOMER,
-            getCustomerById: AppBase.API_CUSTOMER,
-            createCustomer: AppBase.API_CUSTOMER,
-            delete: AppBase.API_CUSTOMER + '/delete'
+            getAllStylist: AppBase.API_STYLIST,
+            getStylistById: AppBase.API_STYLIST,
+            createStylist: AppBase.API_STYLIST,
+            deleteStylist: AppBase.API_STYLIST + '/delete'
 
         },
         elements: {},
@@ -105,117 +83,35 @@
         commands: {}
     }
 
-    let locationRegion = new LocationRegion();
-    let customer = new Customer();
+    let stylist = new Stylist();
 
-    page.elements.tbCustomerBody = $('#tbCustomerBody')
+    page.elements.tbStylistBody = $('#tbStylistBody')
 
-    page.elements.btnShowModalCreate = $('#btnShowModalCreate');
-    page.elements.frmCreate = $('#formCreate');
-    page.elements.modalCreate = $('#modalCreate');
-    page.elements.fullNameCre = $('#fullNameCre');
-    page.elements.emailCre = $('#emailCre');
-    page.elements.phoneCre = $('#phoneCre');
-    page.elements.balanceCre = $('#balanceCre');
-    page.elements.provinceCre = $('#provinceCre');
-    page.elements.districtCre = $('#districtCre');
-    page.elements.wardCre = $('#wardCre');
-    page.elements.addressCre = $('#addressCre');
-    page.elements.btnCreate = $('#btnCreate');
-
-    page.elements.modalUpdate = $('#modalUpdate');
-    page.elements.frmUpdate = $('#formUpdate');
-    page.elements.provinceUp = $('#provinceUp');
-    page.elements.districtUp = $('#districtUp');
-    page.elements.wardUp = $('#wardUp');
-    page.elements.addressUp = $('#addressUp');
-    page.elements.fullNameUp = $('#fullNameUp');
-    page.elements.emailUp = $('#emailUp');
-    page.elements.phoneUp = $('#phoneUp');
-    page.elements.btnUpdate = $('#btnUpdate');
+    page.elements.btnShowModalCreateSty = $('#btnShowModalCreateSty');
+    page.elements.frmCreateSty = $('#formCreateSty');
+    page.elements.modalCreateSty = $('#modalCreateSty');
+    page.elements.fullNameCreSty = $('#fullNameCreSty');
+    page.elements.phoneCreSty = $('#phoneCreSty');
+    page.elements.statusCreSty = $('#statusCreSty');
+    page.elements.btnCreateSty = $('#btnCreateSty');
 
 
+    page.elements.modalUpdateSty = $('#modalUpdateSty');
+    page.elements.frmUpdateSty = $('#formUpdateSty');
+    page.elements.fullNameUpSty = $('#fullNameUpSty');
+    page.elements.phoneUpSty = $('#phoneUpSty');
+    page.elements.statusUpSty = $('#statusUpSty');
 
-    page.commands.getAllProvinces = () => {
-        return $.ajax({
-            url: 'https://vapi.vnappmob.com/api/province/'
-        })
-            .done((data) => {
-                const provinces = data.results;
-
-                $.each(provinces, (index, item) => {
-                    const str = renderOptionProvince(item);
-                    page.elements.provinceCre.append(str);
-                    page.elements.provinceUp.append(str);
-                })
-            })
-            .fail((error) => {
-                console.log(error);
-            })
-    }
-
-    page.commands.getAllDistrictsByProvinceId = (provinceId, element) => {
-        return $.ajax({
-            url: 'https://vapi.vnappmob.com/api/province/district/' + provinceId
-        })
-            .done((data) => {
-                const districts = data.results;
-
-                element.empty();
+    page.elements.btnUpdateSty = $('#btnUpdateSty');
 
 
-                $.each(districts, (index, item) => {
-                    const str = renderOptionDistrict(item);
-                    element.append(str);
-
-                })
-            })
-            .fail((error) => {
-                console.log(error);
-            })
-    }
-
-    page.commands.getAllWardsByDistrictId = (districtId, element) => {
-        return $.ajax({
-            url: 'https://vapi.vnappmob.com/api/province/ward/' + districtId
-        })
-            .done((data) => {
-                const wards = data.results;
-
-                element.empty();
-
-                $.each(wards, (index, item) => {
-                    const str = renderOptionWard(item);
-                    element.append(str);
-                })
-            })
-            .fail((error) => {
-                console.log(error);
-            })
-    }
-
-    const renderOptionProvince = (obj) => {
-        return `<option value="${obj.province_id}">${obj.province_name}</option>`
-    }
-
-    const renderOptionDistrict = (obj) => {
-        return `<option value="${obj.district_id}">${obj.district_name}</option>`;
-    }
-
-    const renderOptionWard = (obj) => {
-        return `<option value="${obj.ward_id}">${obj.ward_name}</option>`;
-    }
-
-    const renderCustomer = (obj) => {
+    const renderStylist = (obj) => {
         return `
                 <tr id="tr_${obj.id}">
                     <td>${obj.id}</td>
-                    <td>${obj.fullName}</td>
+                    <td>${obj.stylistName}</td>
                     <td>${obj.phone}</td>
-                    <td>${obj.locationRegion.provinceName}</td>
-                    <td>${obj.locationRegion.districtName}</td>
-                    <td>${obj.locationRegion.wardName}</td>
-                    <td>${obj.locationRegion.address}</td>
+                    <td>${obj.stylistStatus.statusName}</td>
                     <td>
                         <button title = "Edit" class="btn btn-outline-secondary edit" data-id="${obj.id}">
                             <i class="fas fa-user-edit"></i>
@@ -230,50 +126,19 @@
             `;
     }
 
-    page.elements.provinceCre.on('change', function () {
-        const provinceId = $(this).val();
-        page.commands.getAllDistrictsByProvinceId(provinceId, page.elements.districtCre).then((data) => {
-            const districtId = page.elements.districtCre.val();
+    const strBody = $('#tbStylistBody')
 
-            page.commands.getAllWardsByDistrictId(districtId, page.elements.wardCre);
-        });
-    })
-
-    page.elements.provinceUp.on('change', function () {
-        const provinceId = $(this).val();
-        page.commands.getAllDistrictsByProvinceId(provinceId, page.elements.districtUp).then((data) => {
-            const districtId = page.elements.districtUp.val();
-
-            page.commands.getAllWardsByDistrictId(districtId, page.elements.wardUp);
-        });
-    })
-
-    page.elements.districtCre.on('change', function () {
-        const districtId = $(this).val();
-        page.commands.getAllWardsByDistrictId(districtId, page.elements.wardCre);
-    })
-
-    page.elements.districtUp.on('change', function () {
-        const districtId = $(this).val();
-        page.commands.getAllWardsByDistrictId(districtId, page.elements.wardUp);
-    })
-
-    const strBody = $('#tbCustomerBody')
-
-    let customers = [];
-
-    page.commands.getAllCustomers = () => {
+    page.commands.getAllStylist = () => {
 
         return $.ajax({
             type: 'get',
-            url: page.urls.getAllCustomers,
+            url: page.urls.getAllStylist,
             success: function (res) {
                 console.log(res)
-                customers = res;
                 strBody.empty();
 
                 $.each(res, (index, item) => {
-                    const str = renderCustomer(item);
+                    const str = renderStylist(item);
                     $(strBody).prepend(str);
                 })
 
@@ -283,8 +148,8 @@
         });
     }
 
-    page.commands.deleteCustomer = () => {
-        $('#tbCustomerBody').on('click', '.delete', function () {
+    page.commands.deleteStylist = () => {
+        $('#tbStylistBody').on('click', '.delete', function () {
             const id = $(this).data('id');
             var confirmBox = webToast.confirm("Are you sure you want to delete??");
             confirmBox.click(function () {
@@ -296,9 +161,9 @@
                     align: 'bottomright',
                     line: true,
                 });
-                customer.deleted = true;
-                customer.id = id;
-                console.log(customer);
+                stylist.deleted = true;
+                stylist.id = id;
+                console.log(stylist);
 
                 setTimeout(() => {
                     $.ajax({
@@ -335,39 +200,21 @@
         });
     }
 
-    page.commands.showModalUpdate = () => {
-        $('#tbCustomerBody').on('click', '.edit', function () {
+    page.commands.showModalUpdateSty = () => {
+        $('#tbStylistBody').on('click', '.edit', function () {
             const id = $(this).data('id');
 
             $.ajax({
-                url: page.urls.getCustomerById+ '/' + id
+                url: page.urls.getStylistById+ '/' + id
             })
                 .done((data) => {
                     console.log(data)
                     if (Object.keys(data).length > 0) {
-
-                        const provinceId = data.locationRegion.provinceId;
-                        const districtId = data.locationRegion.districtId;
-                        const wardId = data.locationRegion.wardId;
-
-                        page.commands.getAllDistrictsByProvinceId(provinceId, page.elements.districtUp).then((data) => {
-                            $('#districtUp').val(districtId);
-
-                            page.commands.getAllWardsByDistrictId(districtId, page.elements.wardUp).then((data) => {
-                                $('#wardUp').val(wardId);
-                            })
-                        })
-
-
-                        $('#idUp').val(data.id);
-                        $('#fullNameUp').val(data.fullName);
-                        $('#emailUp').val(data.email);
-                        $('#phoneUp').val(data.phone);
-
-                        $('#provinceUp').val(provinceId);
-
-                        $('#addressUp').val(data.locationRegion.address);
-                        $('#modalUpdate').modal('show');
+                        $('#idUpSty').val(data.id);
+                        $('#fullNameUpSty').val(data.stylistName);
+                        $('#phoneUpSty').val(data.phone);
+                        $('#statusUpSty').val(data.stylistStatus.statusName)
+                        $('#modalUpdateSty').modal('show');
                     } else {
                         alert('Say No');
                     }
@@ -378,15 +225,15 @@
         })
     }
 
-    page.commands.getCustomerById = (id) => {
+    page.commands.getStylistById = (id) => {
         return $.ajax({
             url: page.urls.getCustomerById + '/' + id
         })
     }
 
 
-    page.commands.handleCreateCustomer = () => {
-        page.elements.btnCreate.attr('disabled', true);
+    page.commands.handleCreateStylist = () => {
+        page.elements.btnCreateSty.attr('disabled', true);
 
         let load = webToast.loading({
             status: 'Loading...',
@@ -395,21 +242,10 @@
             line: true,
         });
 
-        locationRegion.id = null;
-        locationRegion.provinceId = page.elements.provinceCre.val();
-        locationRegion.provinceName = page.elements.provinceCre.find('option:selected').text();
-        locationRegion.districtId = page.elements.districtCre.val();
-        locationRegion.districtName = page.elements.districtCre.find('option:selected').text();
-        locationRegion.wardId = page.elements.wardCre.val();
-        locationRegion.wardName = page.elements.wardCre.find('option:selected').text();
-        locationRegion.address = page.elements.addressCre.val();
-
-        customer.id = null;
-        customer.fullName = page.elements.fullNameCre.val();
-        customer.email = page.elements.emailCre.val();
-        customer.phone = page.elements.phoneCre.val();
-        customer.locationRegion = locationRegion;
-        customer.balance = 0;
+        stylist.id = null;
+        stylist.stylistName = page.elements.fullNameCreSty.val();
+        stylist.phone = page.elements.phoneCreSty.val();
+        stylist.stylistStatus = page.elements.statusCreSty.val();
         customer.deleted = 0;
 
         setTimeout(() => {
@@ -419,15 +255,15 @@
                     'content-type': 'application/json'
                 },
                 type: 'POST',
-                url: page.urls.getAllCustomers,
-                data: JSON.stringify(customer)
+                url: page.urls.getAllStylist,
+                data: JSON.stringify(stylist)
             })
                 .done((data) => {
 
-                    const str = renderCustomer(data);
+                    const str = renderStylist(data);
                     $(strBody).prepend(str);
 
-                    page.elements.modalCreate.modal('hide');
+                    page.elements.modalCreateSty.modal('hide');
 
                     webToast.Success({
                         status: 'Thêm mới thành công',
@@ -447,10 +283,10 @@
         }, 1000);
     };
 
-    page.commands.handleUpdateCustomer = () => {
-        page.elements.btnUpdate.attr('disabled', true);
+    page.commands.handleUpdateStylist = () => {
+        page.elements.btnUpdateSty.attr('disabled', true);
 
-        const customerId = $('#idUp').val();
+        const stylistId = $('#idUpSty').val();
 
         let load = webToast.loading({
             status: 'Loading...',
@@ -459,22 +295,11 @@
             line: true,
         });
 
-        // locationRegion.id = customerId;
-        locationRegion.provinceId = page.elements.provinceUp.val();
-        locationRegion.provinceName = page.elements.provinceUp.find('option:selected').text();
-        locationRegion.districtId = page.elements.districtUp.val();
-        locationRegion.districtName = page.elements.districtUp.find('option:selected').text();
-        locationRegion.wardId = page.elements.wardUp.val();
-        locationRegion.wardName = page.elements.wardUp.find('option:selected').text();
-        locationRegion.address = page.elements.addressUp.val();
-
-        customer.id = customerId
-        customer.fullName = page.elements.fullNameUp.val();
-        customer.email = page.elements.emailUp.val();
-        customer.phone = page.elements.phoneUp.val();
-        customer.locationRegion = locationRegion;
-        customer.deleted = 0;
-        console.log(customer);
+        stylist.id = stylistId;
+        stylist.fullName = page.elements.fullNameUp.val();
+        stylist.phone = page.elements.phoneUp.val();
+        stylist.deleted = 0;
+        console.log(stylist);
         setTimeout(() => {
             $.ajax({
                 headers: {
@@ -482,15 +307,15 @@
                     'content-type': 'application/json'
                 },
                 type: 'POST',
-                url: page.urls.getCustomerById + '/' + customerId,
-                data: JSON.stringify(customer)
+                url: page.urls.getStylistById + '/' + stylistId,
+                data: JSON.stringify(stylist)
             })
                 .done((data) => {
-                    const str = renderCustomer(data);
-                    const currentRow = $('#tr_' + customerId);
+                    const str = renderStylist(data);
+                    const currentRow = $('#tr_' + stylistId);
                     currentRow.replaceWith(str);
 
-                    $('#modalUpdate').modal('hide');
+                    $('#modalUpdateStylist').modal('hide');
 
                     webToast.Success({
                         status: 'Cập nhật thành công',
@@ -504,7 +329,7 @@
                     console.log(error);
                 })
                 .always(() => {
-                    page.elements.btnUpdate.attr('disabled', false);
+                    page.elements.btnUpdateSty.attr('disabled', false);
                     load.remove();
                 })
         }, 1000);
@@ -512,79 +337,59 @@
 
 
 
-    page.elements.frmCreate.validate({
+    page.elements.frmCreateSty.validate({
         rules: {
-            fullNameCre: {
+            fullNameCreSty: {
                 required: true,
                 minlength: 5,
                 maxlength: 25
             },
-            emailCre: {
-                required: true,
-                isEmail: true
-            },
-            phoneCre: {
+            phoneCreSty: {
                 required: true,
                 isNumberWithSpace: true
 
             }
         },
         messages: {
-            fullNameCre: {
+            fullNameCreSty: {
                 required: 'Vui lòng nhập họ tên đầy đủ',
                 minlength: 'Họ tên tối thiểu là 5 ký tự',
                 maxlength: 'Họ tên tối đa là 25 ký tự'
             },
-            emailCre: {
-                required: 'Vui lòng nhập email đầy đủ',
-            },
-            phoneCre: {
+            phoneCreSty: {
                 required: 'Vui lòng nhập phone đầy đủ'
 
             }
         },
         submitHandler: function () {
-            page.commands.handleCreateCustomer();
+            page.commands.handleCreateStylist();
         }
     })
-    page.elements.frmUpdate.validate({
+    page.elements.frmUpdateSty.validate({
         rules: {
-            fullNameUp: {
+            fullNameUpSty: {
                 required: true,
                 minlength: 5,
                 maxlength: 25
             },
-            emailUp: {
-                required: true,
-                isEmail: true
-            },
-            phoneUp: {
+            phoneUpSty: {
                 required: true,
                 isNumberWithSpace: true
 
-            },
-            addressUp: {
-                required: true
             }
         },
         messages: {
-            fullNameUp: {
+            fullNameUpSty: {
                 required: 'Vui lòng nhập họ tên đầy đủ',
                 minlength: 'Họ tên tối thiểu là 5 ký tự',
                 maxlength: 'Họ tên tối đa là 25 ký tự'
             },
-            emailUp: {
-                required: 'Vui lòng nhập email đầy đủ',
-            },
-            phoneUp: {
+            phoneUpSty: {
                 required: 'Vui lòng nhập phone đầy đủ'
-            },
-            addressUp: {
-                required: 'Vui lòng nhập địa chỉ đầy đủ'
             }
         },
         submitHandler: function () {
-            page.commands.handleUpdateCustomer();
+            page.commands.handleUpdateStylist();
         }
     })
 
@@ -604,22 +409,22 @@
 
     page.initializeControlEvent = () => {
 
-        page.commands.deleteCustomer();
+        page.commands.deleteStylist();
 
 
-        page.commands.showModalUpdate();
+        page.commands.showModalUpdateSty();
 
 
-        page.elements.btnUpdate.on('click', () => {
-            page.elements.frmUpdate.trigger('submit');
+        page.elements.btnUpdateSty.on('click', () => {
+            page.elements.frmUpdateSty.trigger('submit');
         })
 
-        page.elements.btnShowModalCreate.on('click', () => {
-            page.elements.modalCreate.modal('show');
+        page.elements.btnShowModalCreateSty.on('click', () => {
+            page.elements.modalCreateSty.modal('show');
         })
 
-        page.elements.btnCreate.on('click', () => {
-            page.elements.frmCreate.trigger('submit');
+        page.elements.btnCreateSty.on('click', () => {
+            page.elements.frmCreateSty.trigger('submit');
         })
 
 
@@ -627,17 +432,8 @@
 
     page.loadData = () => {
 
-        page.commands.getAllCustomers();
+        page.commands.getAllStylist();
 
-        page.commands.getAllProvinces().then((data) => {
-            const provinceId = page.elements.provinceCre.val();
-
-            page.commands.getAllDistrictsByProvinceId(provinceId, page.elements.districtCre).then((data) => {
-                const districtId = page.elements.districtCre.val();
-
-                page.commands.getAllWardsByDistrictId(districtId, page.elements.wardCre);
-            })
-        });
     }
 
     $(() => {
