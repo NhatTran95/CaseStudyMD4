@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +32,7 @@ public class HaircutSchedule extends BaseEntity {
     @JoinColumn(name = "stylist_id", referencedColumnName = "id", nullable = false)
     private Stylist stylist;
 
-    private Date hourBook;
+    private String hourBook;
 
     private int quantityService;
 

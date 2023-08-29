@@ -5,6 +5,7 @@ class AppBase {
   static API_CUSTOMER = this.API_SERVER + '/customers';
 
   static API_STYLIST = this.API_SERVER + '/stylists';
+  static API_SERVICES = this.API_SERVER + '/services';
 }
 
 class LocationRegion {

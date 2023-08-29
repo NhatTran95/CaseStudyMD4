@@ -7,13 +7,20 @@
   <title> Barber HTML-5 Template </title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="manifest" href="site.webmanifest">
   <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
 
   <!-- CSS here -->
   <th:block th:replace="layout/css" />
   <!-- Google font -->
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+  <style>
+    #serviceBooker , #stylistBooker{
+      display: block !important;
+    }
+    .nice-select{
+      display: none !important;
+    }
+  </style>
 </head>
 
 <body>
@@ -77,16 +84,16 @@
                 <div class="form-group" style="margin-top: 15px">
                   <span class="form-label">Chọn dịch vụ</span>
                   <select class="form-select" type="text" id="serviceBooker"></select>
-                  <div>
-                    <span class="form-label">Tổng tiền:</span>
-                    <span class="form-label">Thời lượng dự kiến:</span>
-                  </div>
+<!--                  <div>-->
+<!--                    <span class="form-label">Tổng tiền:</span>-->
+<!--                    <span class="form-label">Thời lượng dự kiến:</span>-->
+<!--                  </div>-->
                 </div>
 
 
                 <div class="form-group">
                   <span class="form-label">Chọn kĩ thuật viên</span>
-                  <input class="form-control" type="text">
+                  <select class="form-select" type="text" id="stylistBooker"></select>
                 </div>
 
 
@@ -102,21 +109,27 @@
                 <div class="form-group time-booking">
                   <div class="row">
                     <div class="col-2">
-                      <button type="button" value="">10:00</button>
+                      <input type="hidden" value="10:00">
+                      <button type="button">10:00</button>
                     </div>
                     <div class="col-2">
+                      <input type="hidden" value="11:00">
                       <button type="button" value="">11:00</button>
                     </div>
                     <div class="col-2">
+                      <input type="hidden" value="12:00">
                       <button type="button" value="">12:00</button>
                     </div>
                     <div class="col-2">
+                      <input type="hidden" value="13:00">
                       <button type="button" value="">13:00</button>
                     </div>
                     <div class="col-2">
+                      <input type="hidden" value="14:00">
                       <button type="button" value="">14:00</button>
                     </div>
                     <div class="col-2">
+                      <input type="hidden" value="15:00">
                       <button type="button" value="">15:00</button>
                     </div>
                   </div>
@@ -125,28 +138,34 @@
                 <div class="form-group time-booking">
                   <div class="row">
                     <div class="col-2">
+                      <input type="hidden" value="16:00">
                       <button type="button" value="">16:00</button>
                     </div>
                     <div class="col-2">
+                      <input type="hidden" value="17:00">
                       <button type="button" value="">17:00</button>
                     </div>
                     <div class="col-2">
+                      <input type="hidden" value="18:00">
                       <button type="button" value="">18:00</button>
                     </div>
                     <div class="col-2">
+                      <input type="hidden" value="19:00">
                       <button type="button" value="">19:00</button>
                     </div>
                     <div class="col-2">
+                      <input type="hidden" value="20:00">
                       <button type="button" value="">20:00</button>
                     </div>
                     <div class="col-2">
+                      <input type="hidden" value="21:00">
                       <button type="button" value="">21:00</button>
                     </div>
                   </div>
                 </div>
 
                 <div class="form-btn">
-                  <button class="btn header-btn" style="width: 100%; margin: 25px 0;">Book Now</button>
+                  <button class="btn header-btn" style="width: 100%; margin: 25px 0;" id="btnBooking">Book Now</button>
                 </div>
               </form>
             </div>
@@ -173,8 +192,8 @@
 <script>
   const page = {
     urls: {
-      getAllCustomers: AppBase.API_CUSTOMER,
-      getCustomerById: AppBase.API_CUSTOMER,
+      getAllServices: AppBase.API_SERVICES,
+      getAllStylist: AppBase.API_STYLIST,
       createCustomer: AppBase.API_CUSTOMER,
       deposit: AppBase.API_CUSTOMER + '/deposit'
     },
@@ -182,6 +201,132 @@
     loadData: {},
     commands: {}
   }
+
+  page.elements.serviceBooker = $('#serviceBooker');
+  page.commands.getAllServices = () => {
+    return $.ajax({
+      url: page.urls.getAllServices
+    })
+            .done((data) => {
+              console.log(data)
+              const services = data;
+
+              $.each(services, (index, item) => {
+
+                const str = renderOptionServices(item);
+
+                page.elements.serviceBooker.append(str);
+
+              })
+            })
+            .fail((error) => {
+              console.log(error);
+            })
+  }
+
+  const renderOptionServices = (obj) => {
+    return `<option value="${obj.id}">${obj.serviceName} - ${obj.price}</option>`;
+  }
+
+  page.elements.stylistBooker = $('#stylistBooker');
+  page.commands.getAllStylist = () => {
+    return $.ajax({
+      url: page.urls.getAllStylist
+    })
+            .done((data) => {
+              console.log(data)
+              const stylists = data;
+
+              $.each(stylists, (index, item) => {
+
+                const str = renderOptionStylists(item);
+
+                page.elements.stylistBooker.append(str);
+
+              })
+            })
+            .fail((error) => {
+              console.log(error);
+            })
+  }
+
+  const renderOptionStylists = (obj) => {
+    return `<option value="${obj.id}">${obj.stylistName}</option>`;
+  }
+
+  $(document).ready(function() {
+    page.elements.btnTimeBooking = $('.time-booking button');
+
+    page.elements.btnTimeBooking.on('click', function() {
+      // Đổi màu của nút được click
+      $(this).css('background-color', '#D19F68');
+      $(this).addClass('booking')
+
+      // Vô hiệu hóa các nút khác
+      page.elements.btnTimeBooking.not(this).css('background-color','#3498DB')
+    });
+  });
+
+  page.elements.btnBooking = $('#btnBooking')
+  page.elements.btnBooked = $('.booking')
+
+  page.commands.handleBooking = () => {
+    page.elements.btnBooking.attr('disabled', true);
+
+    let load = webToast.loading({
+      status: 'Loading...',
+      message: 'Please Wait a moment',
+      align: 'bottomright',
+      line: true,
+    });
+    const obj = {
+      hour_book:
+    }
+    setTimeout(() => {
+      $.ajax({
+        headers: {
+          'accept': 'application/json',
+          'content-type': 'application/json'
+        },
+        type: 'POST',
+        url: page.urls.getAllServices,
+        data: JSON.stringify(obj)
+      })
+              .done((data) => {
+                // const str = page.commands.renderCustomer(data);
+                // page.elements.tbCustomerBody.prepend(str);
+
+                // page.elements.modalCreate.modal('hide');
+
+                webToast.Success({
+                  status: 'Thêm mới thành công',
+                  message: '',
+                  delay: 2000,
+                  align: 'topright'
+                });
+
+              })
+              .fail((error) => {
+                console.log(error);
+              })
+              .always(() => {
+                page.elements.btnBooking.attr('disabled', false);
+                load.remove();
+              })
+    }, 1000);
+  }
+
+  page.loadData = () => {
+    page.commands.getAllServices();
+    page.commands.getAllStylist();
+  }
+
+  $(() => {
+    page.loadData();
+
+    // page.initializeControlEvent();
+  })
+
 
 </script>
 
