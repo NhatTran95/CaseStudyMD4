@@ -10,4 +10,9 @@ public class HomeController {
         return "views/index";
     }
 
+    @GetMapping("/booking")
+    public String showBook() {
+        return "views/index";
+    }
+
 }
