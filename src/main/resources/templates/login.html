@@ -87,24 +87,43 @@
 
 <script>
     const btnRegister = $('#btnRegister');
-
     btnRegister.on('click', () => {
         const username = $('#reUserName').val();
         const password = $('#rePassword').val();
         const phone = $('#phone').val();
         const passwordReplay = $('#rePasswordReplay').val();
         const roleId = 2;
-
-
         const obj = {
             username,
             password,
             phone,
             roleId
         }
+        if(username.length == 0){
+            webToast.Danger({
+                status: 'vui lòng nhập username',
+                message: '',
+                delay: 2000,
+                align: 'topright'
+            });
+        }
+        if(isNaN(parseInt(phone))){
+            webToast.Danger({
+                status: 'vui lòng nhập số điện thoại là số',
+                message: '',
+                delay: 2000,
+                align: 'topright'
+            });
+        }
         if(password !== passwordReplay){
-            alert('mat khau khong trung nhau')
-        }else {
+            webToast.Danger({
+                status: 'mật khẩu không trùng khớp',
+                message: '',
+                delay: 2000,
+                align: 'topright'
+            });
+        }
+        if(password == passwordReplay && !isNaN(parseInt(phone)) && username.length > 0) {
             $.ajax({
                 headers: {
                     'content-type': 'application/json'
@@ -123,12 +142,12 @@
                 })
                 .fail((error) => {
                     console.log(error);
-                    webToast.Danger({
-                        status: 'Lỗi đăng kí tài khoản',
-                        message: '',
-                        delay: 2000,
-                        align: 'topright'
-                    });
+                    // webToast.Danger({
+                    //     status: 'Lỗi đăng kí tài khoản. Vui lòng nhập đầy đủ thông tin',
+                    //     message: '',
+                    //     delay: 2000,
+                    //     align: 'topright'
+                    // });
                 })
         }
     })
@@ -169,14 +188,15 @@
                 }
 
 
-
-
-
-
             })
             .fail((error) => {
                 console.log(error);
-                alert('Lỗi đăng nhập')
+                webToast.Danger({
+                    status: 'Vui lòng nhập đúng tài khoản để đăng nhập',
+                    message: '',
+                    delay: 2000,
+                    align: 'topright'
+                });
             })
     })
 
