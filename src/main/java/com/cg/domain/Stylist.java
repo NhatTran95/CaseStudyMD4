@@ -1,5 +1,7 @@
 package com.cg.domain;
 
+import com.cg.domain.Enum.EGender;
+import com.cg.domain.Enum.EStatusStylist;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,8 +21,11 @@ public class Stylist {
 
     private String name;
 
-    @ManyToOne
-    private StatusStylist statusStylist;
+    private EGender gender;
 
+    @OneToOne
+    private StylistImage stylistImage;
+
+    private EStatusStylist status;
 
 }

@@ -1,11 +1,13 @@
 package com.cg.domain;
 
+import com.cg.domain.Enum.EStatusBooking;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,13 +23,13 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDate dayBooking;
+    private LocalDateTime dayTimeBooking;
 
-    private LocalDateTime timeBooking;
+    private String name;
 
-    private String customerName;
+    private String phoneNumber;
 
-    private String customerPhoneNumber;
+    private BigDecimal totalPrice;
 
     @OneToMany(mappedBy = "booking")
     private List<BookingDetail> bookingDetails;
@@ -39,5 +41,8 @@ public class Booking {
     private Customer customer;
 
     @ManyToOne
-    private StatusBooking statusBooking;
+    private User user;
+
+    private EStatusBooking status;
+
 }

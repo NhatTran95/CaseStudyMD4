@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "booking_details")
 @Getter
@@ -17,10 +19,19 @@ public class BookingDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private BigDecimal price;
+
+    private String name;
+
     @ManyToOne
     private Booking booking;
 
     @ManyToOne
-    private HairService hairService;
+    private HairDetail hairDetail;
+
+     public BookingDetail(Booking booking, HairDetail hairDetail){
+         this.booking = booking;
+         this.hairDetail = hairDetail;
+     }
 
 }

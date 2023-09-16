@@ -21,4 +21,13 @@ public class Customer {
 
     private String phone;
 
+    public Customer(String name, String phone){
+        this.name = name;
+        this.phone = phone;
+    }
+
+    public Customer(Long id){
+        this.id = id;
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.cg.service.request;
+package com.cg.service.dto.request;
 
 import lombok.*;
 

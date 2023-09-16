@@ -1,4 +1,4 @@
-package com.cg.service.response;
+package com.cg.service.dto.response;
 
 import lombok.*;
 
