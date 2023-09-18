@@ -21,11 +21,13 @@ public class Stylist {
 
     private String name;
 
+    @Enumerated(EnumType.STRING)
     private EGender gender;
 
     @OneToOne
     private StylistImage stylistImage;
 
+    @Enumerated(EnumType.STRING)
     private EStatusStylist status;
 
 }

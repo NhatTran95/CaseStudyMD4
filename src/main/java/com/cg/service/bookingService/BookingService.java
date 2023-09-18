@@ -2,6 +2,8 @@ package com.cg.service.bookingService;
 
 import com.cg.domain.Booking;
 import com.cg.domain.BookingDetail;
+import com.cg.domain.Customer;
+import com.cg.domain.Enum.EStatusBooking;
 import com.cg.domain.HairDetail;
 import com.cg.repository.*;
 import com.cg.service.bookingService.bookingRequest.BookingSaveRequest;
@@ -43,7 +45,6 @@ public class BookingService {
         search = "%" + search + "%";
         return bookingRepository.searchEverything(search ,pageable).map(e -> {
             var result = AppUtil.mapper.map(e, BookingListResponse.class);
-            result.setDayTimeBooking(e.getDayTimeBooking().toString());
             result.setStylist(e.getStylist().getName());
             if(e.getCustomer() == null){
                 result.setRole(e.getUser().getRole().toString());
@@ -58,16 +59,24 @@ public class BookingService {
     }
     public void create(BookingSaveRequest request){
         var book = AppUtil.mapper.map(request, Booking.class);
+        String dateTimeBooking = request.getDayBooking() +'T'+ request.getTimeBooking();
+        LocalDateTime dateTimeBook = LocalDateTime.parse(dateTimeBooking);
+        book.setDayTimeBooking(dateTimeBook);
+        BigDecimal totalPrice = BigDecimal.ZERO;
+        for (var idHairDetail:request.getIdHairDetails()) {
+            totalPrice = hairDetailRepository.findById(Long.valueOf(idHairDetail)).get().getPrice().add(totalPrice);
+        }
+        book.setTotalPrice(totalPrice);
+        book.setStatus(EStatusBooking.valueOf("UNPAID"));
         book = bookingRepository.save(book);
-
         Booking finalBook = book;
         bookingDetailRepository.saveAll(request
                 .getIdHairDetails()
                 .stream()
-                .map(id -> new BookingDetail(finalBook, new HairDetail(Long.valueOf(id))))
+                .map(id -> new BookingDetail(finalBook, new HairDetail(Long.valueOf(id)),request.getName(),hairDetailRepository.findById(Long.valueOf(id)).get().getPrice()))
                 .collect(Collectors.toList()));
+        var customer = AppUtil.mapper.map(request, Customer.class);
+        customerRepository.save(customer);
     }
-
-
 
 }

@@ -23,5 +23,7 @@ public class BookingListResponse {
 
     private String bookingDetails;
 
+    private String status;
+
     private String role;
 }

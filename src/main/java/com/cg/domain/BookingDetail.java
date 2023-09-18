@@ -29,9 +29,11 @@ public class BookingDetail {
     @ManyToOne
     private HairDetail hairDetail;
 
-     public BookingDetail(Booking booking, HairDetail hairDetail){
+     public BookingDetail(Booking booking, HairDetail hairDetail,String name, BigDecimal price){
          this.booking = booking;
          this.hairDetail = hairDetail;
+         this.name = name;
+         this.price = price;
      }
 
 }

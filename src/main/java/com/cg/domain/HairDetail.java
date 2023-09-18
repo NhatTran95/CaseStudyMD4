@@ -36,4 +36,5 @@ public class HairDetail {
     public HairDetail(Long id){
         this.id = id;
     }
+
 }

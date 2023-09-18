@@ -1,0 +1,45 @@
+/* CSS cho button "Thêm dịch vụ" */
+.add-service-button {
+    background-color: #007bff; /* Màu nền của nút */
+    color: #fff; /* Màu văn bản */
+    padding: 10px 10px; /* Kích thước của nút */
+    border: none; /* Không có viền */
+    border-radius: 5px; /* Độ cong góc của nút */
+    font-size: 14px; /* Kích thước chữ */
+    cursor: pointer; /* Con trỏ thay đổi khi di chuột qua nút */
+}
+
+/* CSS cho khi button "Thêm dịch vụ" được hover hoặc active */
+.add-service-button:hover,
+.add-service-button:active {
+    background-color: #0056b3; /* Màu nền thay đổi khi hover hoặc active */
+}
+
+
+/* CSS cho các thẻ div bên trong selectedServices */
+#selectedServices div {
+    background-color: #333; /* Màu nền cho các thẻ div con */
+    color: #D19F68; /* Màu văn bản trắng cho các thẻ div con */
+    margin: 5px 0; /* Khoảng cách giữa các thẻ div con */
+    padding: 5px; /* Khoảng cách giữa nội dung và biên của các thẻ div con */
+    border-radius: 3px; /* Độ cong góc của các thẻ div con */
+    !important;
+}
+
+/* CSS cho biểu tượng "X" */
+.delete-icon {
+    cursor: pointer;
+    margin-left: 10px;
+    color: red; /* Màu của biểu tượng "X" */
+}
+
+/* CSS cho các thẻ div đã chọn */
+.selected-service {
+    background-color: #000; /* Màu nền */
+    color: #fff; /* Màu văn bản */
+    padding: 10px; /* Khoảng cách giữa nội dung và biên */
+    border-radius: 5px; /* Độ cong góc */
+    margin-bottom: 10px; /* Khoảng cách giữa các thẻ div */
+    display: flex; /* Để các phần tử con sắp xếp theo hàng ngang */
+    align-items: center; /* Canh giữa dọc */
+}

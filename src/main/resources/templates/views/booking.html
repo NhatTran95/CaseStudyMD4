@@ -58,7 +58,7 @@
               <div class="form-header">
                 <h1 style="color: #D19F68;">ĐẶT LỊCH</h1>
               </div>
-              <form method="post" action="">
+              <form method="post" action="" id="form-booking">
                 <div class="row">
                   <div class="col-6">
                     <div class="form-group">
@@ -83,23 +83,36 @@
 
                 <div class="form-group" style="margin-top: 15px">
                   <span class="form-label">Chọn dịch vụ</span>
-                  <select class="form-select" type="text" id="serviceBooker"></select>
+
+                  <select class="form-select" id="serviceBooker" name="selectedHairDetails">
+                    <option th:each="hairDetail : ${hairDetails}" th:value="${hairDetail.value}" th:text="${hairDetail.name}+'-'+${hairDetail.price}"></option>
+                  </select>
 <!--                  <div>-->
 <!--                    <span class="form-label">Tổng tiền:</span>-->
 <!--                    <span class="form-label">Thời lượng dự kiến:</span>-->
 <!--                  </div>-->
+                  <button onclick="addService()" class="add-service-button">Thêm dịch vụ</button>
                 </div>
 
+                <div id="selectedServices">
+                  <!-- Các dịch vụ đã chọn sẽ được hiển thị ở đây -->
+                </div>
+
+                <div id="totalPrice" >
+                  <!-- Tổng tiền --><h2 class="form-label">Total Price:</h2>
+                </div>
 
                 <div class="form-group">
                   <span class="form-label">Chọn kĩ thuật viên</span>
-                  <select class="form-select" type="text" id="stylistBooker"></select>
+                  <select class="form-select" type="text" id="stylistBooker" name="selectedStylist">
+                    <option th:each="stylist : ${stylists}" th:value="${stylist.value}" th:text="${stylist.name}"></option>
+                  </select>
                 </div>
 
 
                 <div class="form-group">
                   <span class="form-label">Chọn ngày đặt lịch</span>
-                  <input class="form-control" type="date" required>
+                  <input class="form-control" type="date" required id="dayBooking">
                 </div>
 
                 <div class="form-group">
@@ -109,27 +122,21 @@
                 <div class="form-group time-booking">
                   <div class="row">
                     <div class="col-2">
-                      <input type="hidden" value="10:00">
                       <button type="button">10:00</button>
                     </div>
                     <div class="col-2">
-                      <input type="hidden" value="11:00">
                       <button type="button" value="">11:00</button>
                     </div>
                     <div class="col-2">
-                      <input type="hidden" value="12:00">
                       <button type="button" value="">12:00</button>
                     </div>
                     <div class="col-2">
-                      <input type="hidden" value="13:00">
                       <button type="button" value="">13:00</button>
                     </div>
                     <div class="col-2">
-                      <input type="hidden" value="14:00">
                       <button type="button" value="">14:00</button>
                     </div>
                     <div class="col-2">
-                      <input type="hidden" value="15:00">
                       <button type="button" value="">15:00</button>
                     </div>
                   </div>
@@ -138,27 +145,22 @@
                 <div class="form-group time-booking">
                   <div class="row">
                     <div class="col-2">
-                      <input type="hidden" value="16:00">
+
                       <button type="button" value="">16:00</button>
                     </div>
                     <div class="col-2">
-                      <input type="hidden" value="17:00">
                       <button type="button" value="">17:00</button>
                     </div>
                     <div class="col-2">
-                      <input type="hidden" value="18:00">
                       <button type="button" value="">18:00</button>
                     </div>
                     <div class="col-2">
-                      <input type="hidden" value="19:00">
                       <button type="button" value="">19:00</button>
                     </div>
                     <div class="col-2">
-                      <input type="hidden" value="20:00">
                       <button type="button" value="">20:00</button>
                     </div>
                     <div class="col-2">
-                      <input type="hidden" value="21:00">
                       <button type="button" value="">21:00</button>
                     </div>
                   </div>
