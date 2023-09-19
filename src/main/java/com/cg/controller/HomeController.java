@@ -19,6 +19,7 @@ public class HomeController {
         return "views/index";
     }
 
+
     @GetMapping("/booking")
     public ModelAndView showBookingPage() {
         ModelAndView view = new ModelAndView("views/booking");
@@ -36,5 +37,6 @@ public class HomeController {
     public String showProtfokioPage() {
         return "views/portfolio";
     }
+
 
 }
