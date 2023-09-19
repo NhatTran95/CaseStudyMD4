@@ -85,123 +85,123 @@
 <script src="/assets/web-toast/src/webToast.js"></script>
 <script src="/assets/js/login.js"></script>
 
-<script>
-    const btnRegister = $('#btnRegister');
-    btnRegister.on('click', () => {
-        const username = $('#reUserName').val();
-        const password = $('#rePassword').val();
-        const phone = $('#phone').val();
-        const passwordReplay = $('#rePasswordReplay').val();
-        const roleId = 2;
-        const obj = {
-            username,
-            password,
-            phone,
-            roleId
-        }
-        if(username.length == 0){
-            webToast.Danger({
-                status: 'vui lòng nhập username',
-                message: '',
-                delay: 2000,
-                align: 'topright'
-            });
-        }
-        if(isNaN(parseInt(phone))){
-            webToast.Danger({
-                status: 'vui lòng nhập số điện thoại là số',
-                message: '',
-                delay: 2000,
-                align: 'topright'
-            });
-        }
-        if(password !== passwordReplay){
-            webToast.Danger({
-                status: 'mật khẩu không trùng khớp',
-                message: '',
-                delay: 2000,
-                align: 'topright'
-            });
-        }
-        if(password == passwordReplay && !isNaN(parseInt(phone)) && username.length > 0) {
-            $.ajax({
-                headers: {
-                    'content-type': 'application/json'
-                },
-                type: 'POST',
-                url: 'http://localhost:9001/api/auth/register',
-                data: JSON.stringify(obj)
-            })
-                .done((data) => {
-                    webToast.Success({
-                        status: 'Đăng kí thành công',
-                        message: '',
-                        delay: 2000,
-                        align: 'topright'
-                    });
-                })
-                .fail((error) => {
-                    console.log(error);
-                    // webToast.Danger({
-                    //     status: 'Lỗi đăng kí tài khoản. Vui lòng nhập đầy đủ thông tin',
-                    //     message: '',
-                    //     delay: 2000,
-                    //     align: 'topright'
-                    // });
-                })
-        }
-    })
+<!--<script>-->
+<!--    const btnRegister = $('#btnRegister');-->
+<!--    btnRegister.on('click', () => {-->
+<!--        const username = $('#reUserName').val();-->
+<!--        const password = $('#rePassword').val();-->
+<!--        const phone = $('#phone').val();-->
+<!--        const passwordReplay = $('#rePasswordReplay').val();-->
+<!--        const roleId = 2;-->
+<!--        const obj = {-->
+<!--            username,-->
+<!--            password,-->
+<!--            phone,-->
+<!--            roleId-->
+<!--        }-->
+<!--        if(username.length == 0){-->
+<!--            webToast.Danger({-->
+<!--                status: 'vui lòng nhập username',-->
+<!--                message: '',-->
+<!--                delay: 2000,-->
+<!--                align: 'topright'-->
+<!--            });-->
+<!--        }-->
+<!--        if(isNaN(parseInt(phone))){-->
+<!--            webToast.Danger({-->
+<!--                status: 'vui lòng nhập số điện thoại là số',-->
+<!--                message: '',-->
+<!--                delay: 2000,-->
+<!--                align: 'topright'-->
+<!--            });-->
+<!--        }-->
+<!--        if(password !== passwordReplay){-->
+<!--            webToast.Danger({-->
+<!--                status: 'mật khẩu không trùng khớp',-->
+<!--                message: '',-->
+<!--                delay: 2000,-->
+<!--                align: 'topright'-->
+<!--            });-->
+<!--        }-->
+<!--        if(password == passwordReplay && !isNaN(parseInt(phone)) && username.length > 0) {-->
+<!--            $.ajax({-->
+<!--                headers: {-->
+<!--                    'content-type': 'application/json'-->
+<!--                },-->
+<!--                type: 'POST',-->
+<!--                url: 'http://localhost:9001/api/auth/register',-->
+<!--                data: JSON.stringify(obj)-->
+<!--            })-->
+<!--                .done((data) => {-->
+<!--                    webToast.Success({-->
+<!--                        status: 'Đăng kí thành công',-->
+<!--                        message: '',-->
+<!--                        delay: 2000,-->
+<!--                        align: 'topright'-->
+<!--                    });-->
+<!--                })-->
+<!--                .fail((error) => {-->
+<!--                    console.log(error);-->
+<!--                    // webToast.Danger({-->
+<!--                    //     status: 'Lỗi đăng kí tài khoản. Vui lòng nhập đầy đủ thông tin',-->
+<!--                    //     message: '',-->
+<!--                    //     delay: 2000,-->
+<!--                    //     align: 'topright'-->
+<!--                    // });-->
+<!--                })-->
+<!--        }-->
+<!--    })-->
 
 
-</script>
+<!--</script>-->
 
-<script>
-    const btnLogin = $('#btnLogin');
+<!--<script>-->
+<!--    const btnLogin = $('#btnLogin');-->
 
-    btnLogin.on('click', () => {
-        const username = $('#tbUsername').val();
-        const password = $('#tbPassword').val();
+<!--    btnLogin.on('click', () => {-->
+<!--        const username = $('#tbUsername').val();-->
+<!--        const password = $('#tbPassword').val();-->
 
-        const obj = {
-            username,
-            password
-        }
+<!--        const obj = {-->
+<!--            username,-->
+<!--            password-->
+<!--        }-->
 
-        $.ajax({
-            headers: {
-                'content-type': 'application/json'
-            },
-            type: 'POST',
-            url: 'http://localhost:9001/api/auth/login',
-            data: JSON.stringify(obj)
-        })
-            .done((data) => {
-                console.log(data)
-                const roleUser = data.roles[0].authority;
-                console.log("Login success")
-                if(roleUser == "ADMIN"){
-                    location.href = '/customers'
-                }else {
+<!--        $.ajax({-->
+<!--            headers: {-->
+<!--                'content-type': 'application/json'-->
+<!--            },-->
+<!--            type: 'POST',-->
+<!--            url: 'http://localhost:9001/api/auth/login',-->
+<!--            data: JSON.stringify(obj)-->
+<!--        })-->
+<!--            .done((data) => {-->
+<!--                console.log(data)-->
+<!--                const roleUser = data.roles[0].authority;-->
+<!--                console.log("Login success")-->
+<!--                if(roleUser == "ADMIN"){-->
+<!--                    location.href = '/customers'-->
+<!--                }else {-->
 
-                    location.href = '/home'
+<!--                    location.href = '/home'-->
 
-                }
-
-
-            })
-            .fail((error) => {
-                console.log(error);
-                webToast.Danger({
-                    status: 'Vui lòng nhập đúng tài khoản để đăng nhập',
-                    message: '',
-                    delay: 2000,
-                    align: 'topright'
-                });
-            })
-    })
+<!--                }-->
 
 
-</script>
+<!--            })-->
+<!--            .fail((error) => {-->
+<!--                console.log(error);-->
+<!--                webToast.Danger({-->
+<!--                    status: 'Vui lòng nhập đúng tài khoản để đăng nhập',-->
+<!--                    message: '',-->
+<!--                    delay: 2000,-->
+<!--                    align: 'topright'-->
+<!--                });-->
+<!--            })-->
+<!--    })-->
+
+
+<!--</script>-->
 
 
 </body>
