@@ -38,5 +38,10 @@ public class HomeController {
         return "views/portfolio";
     }
 
+    @GetMapping("/admin")
+    public String showAdminPage() {
+        return "admin/index";
+    }
+
 
 }
