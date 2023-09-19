@@ -43,5 +43,10 @@ public class HomeController {
         return "admin/index";
     }
 
+    @GetMapping("/stylist")
+    public String showStylistPage() {
+        return "admin/stylist";
+    }
+
 
 }
