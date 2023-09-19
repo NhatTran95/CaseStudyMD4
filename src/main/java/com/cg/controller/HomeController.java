@@ -43,9 +43,16 @@ public class HomeController {
         return "admin/index";
     }
 
+
     @GetMapping("/login")
-    public String showLogin(){
+    public String showLogin() {
         return "/login";
+    }
+
+    @GetMapping("/stylist")
+    public String showStylistPage() {
+        return "admin/stylist";
+
     }
 
 
