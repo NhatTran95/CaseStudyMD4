@@ -19,11 +19,11 @@ public class Customer {
 
     private String name;
 
-    private String phone;
+    private String phoneNumber;
 
     public Customer(String name, String phone){
         this.name = name;
-        this.phone = phone;
+        this.phoneNumber = phone;
     }
 
     public Customer(Long id){

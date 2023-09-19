@@ -68,15 +68,17 @@ public class BookingService {
         }
         book.setTotalPrice(totalPrice);
         book.setStatus(EStatusBooking.valueOf("UNPAID"));
-        book = bookingRepository.save(book);
+        var customer = AppUtil.mapper.map(request, Customer.class);
+        customerRepository.save(customer);
+        book.setCustomer(customer);
+        bookingRepository.save(book);
         Booking finalBook = book;
         bookingDetailRepository.saveAll(request
                 .getIdHairDetails()
                 .stream()
                 .map(id -> new BookingDetail(finalBook, new HairDetail(Long.valueOf(id)),request.getName(),hairDetailRepository.findById(Long.valueOf(id)).get().getPrice()))
                 .collect(Collectors.toList()));
-        var customer = AppUtil.mapper.map(request, Customer.class);
-        customerRepository.save(customer);
+
     }
 
 }

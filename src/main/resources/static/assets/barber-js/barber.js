@@ -17,6 +17,7 @@ function addService() {
     // Lấy giá trị đã chọn từ ô select
     var selectedService = document.getElementById("serviceBooker");
     var serviceText = selectedService.options[selectedService.selectedIndex].text;
+    var serviceValue = selectedService.options[selectedService.selectedIndex].value;
 
     // Tạo một thẻ div mới để hiển thị dịch vụ đã chọn
     var serviceElement = document.createElement("div");
@@ -30,6 +31,8 @@ function addService() {
     // Tạo một thẻ span để chứa nội dung dịch vụ
     var serviceTextSpan = document.createElement("span");
     serviceTextSpan.textContent = serviceText;
+    serviceTextSpan.setAttribute("valueData", serviceValue);
+    serviceTextSpan.setAttribute("name", "idHairDetails");
 
     // Thêm biểu tượng và nội dung dịch vụ vào thẻ div
     serviceElement.appendChild(serviceTextSpan);
@@ -49,7 +52,7 @@ function updateTotalPrice() {
     let totalPrice = 0;
     for (let i = 0; i < selectedServices.length; i++) {
         let serviceText = selectedServices[i].textContent;
-        let price = parseFloat(serviceText.split("-")[1]);
+        let price = parseFloat(serviceText.split(":")[1]);
         totalPrice += price;
     }
     if (selectedServices.length < 1) {
@@ -85,7 +88,7 @@ function deleteService(element) {
 }
 
 const bookingForm = document.getElementById('form-booking');
-const eSelectedHairDetails = document.querySelectorAll(`#selectedServices span`);
+const eSelectedHairDetails = document.getElementsByName('idHairDetails');
 const tBody = document.getElementById("tBody");
 const eSelectedStylist = document.getElementsByName('selectedStylist');
 const name = document.getElementById('nameBooker')
@@ -115,6 +118,12 @@ let rooms = [];
 
 
 bookingForm.onsubmit = async (e) => {
+    var selectedOptions = [];
+    for (var i = 0; i < eSelectedHairDetails.length; i++) {
+        var value = eSelectedHairDetails[i].getAttribute("valueData");
+        selectedOptions.push(value);
+    }
+
     e.preventDefault();
     let data = getDataFromForm(bookingForm);
     console.log(eSelectedHairDetails)
@@ -123,12 +132,13 @@ bookingForm.onsubmit = async (e) => {
         stylist: {
             id: data.stylist
         },
-        idHairDetails: Array.from(eSelectedHairDetails)
-            .map(e => e.value),
+        idHairDetails: selectedOptions,
+        timeBooking: timeBooking + ":00",
         id: bookingSelected.id
     }
     console.log(data)
-        await createRoom(data)
+        await createBooking(data)
+
         webToast.Success({
             status: 'Thêm thành công',
             message: '',
@@ -136,8 +146,8 @@ bookingForm.onsubmit = async (e) => {
             align: 'topright'
         });
 
-    await renderTable();
-    $('#staticBackdrop').modal('hide');
+    // await renderTable();
+    // $('#staticBackdrop').modal('hide');
 
 }
 
@@ -444,9 +454,9 @@ async function deleteRoom(id) {
     });
 }
 
-async function createRoom(data) {
+async function createBooking(data) {
     console.log(data)
-    const res = await fetch('/api/books', {
+    const res = await fetch('/api/bookings', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

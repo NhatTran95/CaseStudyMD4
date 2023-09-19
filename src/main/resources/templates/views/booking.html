@@ -85,13 +85,13 @@
                   <span class="form-label">Chọn dịch vụ</span>
 
                   <select class="form-select" id="serviceBooker">
-                    <option th:each="hairDetail : ${hairDetails}" th:value="${hairDetail.value}" th:text="${hairDetail.name + '-' + #strings.substringBefore(hairDetail.price.toString(), '.') } + ' Đ'"></option>
+                    <option th:each="hairDetail : ${hairDetails}" th:value="${hairDetail.value}" th:text="${hairDetail.name + ' : ' + #strings.substringBefore(hairDetail.price.toString(), '.') } + ' Đ'"></option>
                   </select>
 
                   <button type="button" onclick="addService(); updateTotalPrice();" class="add-service-button">Thêm dịch vụ</button>
                 </div>
 
-                <div id="selectedServices" name="idHairDetails">
+                <div id="selectedServices"  >
                   <!-- Các dịch vụ đã chọn sẽ được hiển thị ở đây -->
                 </div>
 

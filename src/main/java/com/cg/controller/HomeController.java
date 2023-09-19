@@ -27,4 +27,14 @@ public class HomeController {
         return view;
     }
 
+    @GetMapping("/services")
+    public String showServicePage() {
+        return "views/services";
+    }
+
+    @GetMapping("/portfolio")
+    public String showProtfokioPage() {
+        return "views/portfolio";
+    }
+
 }
