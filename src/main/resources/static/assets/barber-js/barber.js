@@ -1,5 +1,18 @@
 
+var timeBooking;
+$(document).ready(function() {
+    const btnTimeBooking = $('.time-booking button');
 
+    btnTimeBooking.on('click', function() {
+        // Đổi màu của nút được click
+        $(this).css('background-color', '#D19F68');
+        $(this).addClass('booking')
+        timeBooking = $(this).text();
+
+        // Vô hiệu hóa các nút khác
+        btnTimeBooking.not(this).css('background-color','#3498DB')
+    });
+});
 function addService() {
     // Lấy giá trị đã chọn từ ô select
     var selectedService = document.getElementById("serviceBooker");
@@ -12,7 +25,7 @@ function addService() {
     // Tạo một thẻ span để chứa biểu tượng "X" và đặt thuộc tính onclick
     var deleteIcon = document.createElement("span");
     deleteIcon.classList.add("delete-icon");
-    deleteIcon.innerHTML = '<i class="fa fa-times" onclick="deleteService(this)"></i>';
+    deleteIcon.innerHTML = '<i class="fa fa-times" onclick="deleteService(this); updateTotalPrice();"></i>';
 
     // Tạo một thẻ span để chứa nội dung dịch vụ
     var serviceTextSpan = document.createElement("span");
@@ -28,6 +41,38 @@ function addService() {
 }
 
 
+function updateTotalPrice() {
+    // Lấy tất cả các phần tử dịch vụ đã chọn
+    const selectedServices = document.getElementById("selectedServices").children;
+
+    // Tính tổng tiền từ các dịch vụ đã chọn
+    let totalPrice = 0;
+    for (let i = 0; i < selectedServices.length; i++) {
+        let serviceText = selectedServices[i].textContent;
+        let price = parseFloat(serviceText.split("-")[1]);
+        totalPrice += price;
+    }
+    if (selectedServices.length < 1) {
+        document.getElementById("totalPriceValue").textContent = "0 Đ";
+    }
+    // Cập nhật giá trị tổng tiền vào #totalPriceValue
+    document.getElementById("totalPriceValue").textContent = totalPrice.toFixed(0) + " Đ";
+
+}
+
+function formatInputDate() {
+    const dateInput = document.getElementById("dayBooking");
+    const selectedDate = new Date(dateInput.value);
+
+    const year = selectedDate.getFullYear();
+    let month = (selectedDate.getMonth() + 1).toString().padStart(2, "0");
+    let day = selectedDate.getDate().toString().padStart(2, "0");
+
+    const formattedDate = `${year}-${month}-${day}`;
+    dateInput.value = formattedDate;
+}
+
+
 function deleteService(element) {
     // Lấy thẻ div chứa biểu tượng "X"
     var serviceDiv = element.parentElement;
@@ -40,13 +85,13 @@ function deleteService(element) {
 }
 
 const bookingForm = document.getElementById('form-booking');
-const eSelectedHairDetails = document.getElementsByName('selectedHairDetails');
+const eSelectedHairDetails = document.querySelectorAll(`#selectedServices span`);
 const tBody = document.getElementById("tBody");
 const eSelectedStylist = document.getElementsByName('selectedStylist');
 const name = document.getElementById('nameBooker')
 const phone = document.getElementById('phoneBooker')
-const dayBooking = document.getElementById()
-const timeBooking  = document.getElementById()
+// const dayBooking = document.getElementById()
+// const timeBooking  = document.getElementById()
 
 const ePagination = document.getElementById('pagination')
 const eSearch = document.getElementById('search');
@@ -56,7 +101,8 @@ const submitBtn = document.getElementById("submit-btn");
 const formBody = document.getElementById('formBody');
 const eHeaderPrice = document.getElementById('header-price')
 
-let roomSelected = {};
+
+let bookingSelected = {};
 let roomDetail;
 let pageable = {
     page: 1,
@@ -67,32 +113,21 @@ let categories;
 let types;
 let rooms = [];
 
-roomForm.onsubmit = async (e) => {
+
+bookingForm.onsubmit = async (e) => {
     e.preventDefault();
-    let data = getDataFromForm(roomForm);
+    let data = getDataFromForm(bookingForm);
+    console.log(eSelectedHairDetails)
     data = {
         ...data,
-        type: {
-            id: data.type
+        stylist: {
+            id: data.stylist
         },
-        category: {
-            id: data.category
-        },
-        idAuthors: Array.from(eCheckBoxCategories)
-            .filter(e => e.checked)
+        idHairDetails: Array.from(eSelectedHairDetails)
             .map(e => e.value),
-        id: roomSelected.id
+        id: bookingSelected.id
     }
-
-    if (roomSelected.id) {
-        await editRoom(data);
-        webToast.Success({
-            status: 'Sửa thành công',
-            message: '',
-            delay: 2000,
-            align: 'topright'
-        });
-    } else {
+    console.log(data)
         await createRoom(data)
         webToast.Success({
             status: 'Thêm thành công',
@@ -100,24 +135,28 @@ roomForm.onsubmit = async (e) => {
             delay: 2000,
             align: 'topright'
         });
-    }
+
     await renderTable();
     $('#staticBackdrop').modal('hide');
 
 }
+
 function getDataFromForm(form) {
     // event.preventDefault()
     const data = new FormData(form);
     return Object.fromEntries(data.entries())
 }
+
 async function getCategoriesSelectOption() {
     const res = await fetch('api/categories');
     return await res.json();
 }
+
 async function getTypesSelectOption() {
     const res = await fetch('api/types');
     return await res.json();
 }
+
 async function getList() {
     const response = await fetch(`/api/books?page=${pageable.page - 1 || 0}&sort=${pageable.sortCustom || 'id,asc'}&search=${pageable.search || ''}`);
     //response có status ok hoặc không, header và body
@@ -140,6 +179,7 @@ async function getList() {
     return result; // Trả về kết quả mà bạn đã lấy từ response.json()
     // addEventEditAndDelete();
 }
+
 function renderTBody(items) {
     let str = '';
     items.forEach(e => {
@@ -147,6 +187,7 @@ function renderTBody(items) {
     })
     tBody.innerHTML = str;
 }
+
 const genderPagination = () => {
     ePagination.innerHTML = '';
     let str = '';
@@ -171,24 +212,24 @@ const genderPagination = () => {
 
     const ePages = ePagination.querySelectorAll('li'); // lấy hết li mà con của ePagination
     const ePrevious = ePages[0];
-    const eNext = ePages[ePages.length-1]
+    const eNext = ePages[ePages.length - 1]
 
     ePrevious.onclick = () => {
-        if(pageable.page === 1){
+        if (pageable.page === 1) {
             return;
         }
         pageable.page -= 1;
         getList();
     }
     eNext.onclick = () => {
-        if(pageable.page === pageable.totalPages){
+        if (pageable.page === pageable.totalPages) {
             return;
         }
         pageable.page += 1;
         getList();
     }
     for (let i = 1; i < ePages.length - 1; i++) {
-        if(i === pageable.page){
+        if (i === pageable.page) {
             continue;
         }
         ePages[i].onclick = () => {
@@ -214,7 +255,7 @@ const onLoadSort = () => {
         const chevronUp = document.querySelector('.bx-chevron-up');
         chevronDown.style.display = 'block';
         chevronUp.style.display = 'none';
-        if(pageable.sortCustom?.includes('price') &&  pageable.sortCustom?.includes('desc')){
+        if (pageable.sortCustom?.includes('price') && pageable.sortCustom?.includes('desc')) {
             sort = 'price,asc';
             chevronUp.style.display = 'block';
             chevronDown.style.display = 'none';
@@ -223,6 +264,7 @@ const onLoadSort = () => {
         getList();
     }
 }
+
 function renderItemStr(item) {
     return `<tr>
                     <td>
@@ -267,6 +309,7 @@ function renderItemStr(item) {
                     </td>
                 </tr>`
 }
+
 window.onload = async () => {
     categories = await getCategoriesSelectOption();
     types = await getTypesSelectOption();
@@ -274,12 +317,13 @@ window.onload = async () => {
     onLoadSort();
     renderForm(formBody, getDataInput());
 }
+
 function getDataInput() {
     return [
         {
             label: 'Title',
             name: 'title',
-            value: roomSelected.title,
+            value: bookingSelected.title,
             required: true,
             pattern: "^[A-Za-z ]{6,20}",
             message: "Room name must have minimum is 6 characters and maximum is 20 characters",
@@ -287,7 +331,7 @@ function getDataInput() {
         {
             label: 'Type',
             name: 'type',
-            value: roomSelected.type,
+            value: bookingSelected.type,
             type: 'select',
             required: true,
             options: types,
@@ -296,7 +340,7 @@ function getDataInput() {
         {
             label: 'Category',
             name: 'category',
-            value: roomSelected.category,
+            value: bookingSelected.category,
             type: 'select',
             required: true,
             options: categories,
@@ -305,12 +349,12 @@ function getDataInput() {
         {
             label: 'PublishDate',
             name: 'publishDate',
-            value: roomSelected.publishDate,
+            value: bookingSelected.publishDate,
         },
         {
             label: 'Price',
             name: 'price',
-            value: roomSelected.price,
+            value: bookingSelected.price,
             pattern: "[1-9][0-9]{1,10}",
             message: 'Price errors',
             required: true
@@ -318,7 +362,7 @@ function getDataInput() {
         {
             label: 'Description',
             name: 'description',
-            value: roomSelected.description,
+            value: bookingSelected.description,
             pattern: "^[A-Za-z ]{6,120}",
             message: "Description must have minimum is 6 characters and maximum is 20 characters",
             required: true
@@ -326,27 +370,31 @@ function getDataInput() {
 
     ];
 }
+
 async function renderTable() {
     const pageable = await getList();
     rooms = pageable.content;
     renderTBody(rooms);
     addEventEditAndDelete();
 }
+
 const findById = async (id) => {
     const response = await fetch('/api/books/' + id);
     return await response.json();
 }
+
 function showCreate() {
     $('#staticBackdropLabel').text('Create Room');
     clearForm();
     renderForm(formBody, getDataInput())
 }
+
 async function showEdit(id) {
     $('#staticBackdropLabel').text('Edit Book');
     clearForm();
-    roomSelected = await findById(id);
-    console.log(roomSelected)
-    roomSelected.authors.forEach(idAuthor => {
+    bookingSelected = await findById(id);
+    console.log(bookingSelected)
+    bookingSelected.authors.forEach(idAuthor => {
         for (let i = 0; i < eCheckBoxCategories.length; i++) {
             if (+idAuthor === +eCheckBoxCategories[i].value) {
                 eCheckBoxCategories[i].checked = true;
@@ -355,10 +403,12 @@ async function showEdit(id) {
     })
     renderForm(formBody, getDataInput());
 }
+
 function clearForm() {
     roomForm.reset();
-    roomSelected = {};
+    bookingSelected = {};
 }
+
 async function editRoom(data) {
     const res = await fetch('/api/books/' + data.id, {
         method: 'PUT',
@@ -368,6 +418,7 @@ async function editRoom(data) {
         body: JSON.stringify(data)
     })
 }
+
 async function deleteRoom(id) {
     const confirmBox = webToast.confirm("Are you sure to delete Book" + id + "?");
     confirmBox.click(async function () {
@@ -392,6 +443,7 @@ async function deleteRoom(id) {
         }
     });
 }
+
 async function createRoom(data) {
     console.log(data)
     const res = await fetch('/api/books', {
@@ -402,6 +454,7 @@ async function createRoom(data) {
         body: JSON.stringify(data)
     })
 }
+
 const addEventEditAndDelete = () => {
     const eEdits = tBody.querySelectorAll('.edit');
     const eDeletes = tBody.querySelectorAll('.delete');

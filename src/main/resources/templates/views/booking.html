@@ -63,14 +63,14 @@
                   <div class="col-6">
                     <div class="form-group">
                       <span class="form-label">Họ và tên</span>
-                      <input class="form-control" type="text" placeholder="Enter your name" id="nameBooker">
+                      <input class="form-control" type="text" placeholder="Enter your name" id="nameBooker" name="name">
                     </div>
                   </div>
 
                   <div class="col-6">
                     <div class="form-group">
                       <span class="form-label">Số điện thoại</span>
-                      <input class="form-control" type="tel" placeholder="Enter your phone number" id="phoneBooker">
+                      <input class="form-control" type="tel" placeholder="Enter your phone number" id="phoneBooker" name="phoneNumber">
                     </div>
                   </div>
                 </div>
@@ -84,27 +84,25 @@
                 <div class="form-group" style="margin-top: 15px">
                   <span class="form-label">Chọn dịch vụ</span>
 
-                  <select class="form-select" id="serviceBooker" name="selectedHairDetails">
-                    <option th:each="hairDetail : ${hairDetails}" th:value="${hairDetail.value}" th:text="${hairDetail.name}+'-'+${hairDetail.price}"></option>
+                  <select class="form-select" id="serviceBooker">
+                    <option th:each="hairDetail : ${hairDetails}" th:value="${hairDetail.value}" th:text="${hairDetail.name + '-' + #strings.substringBefore(hairDetail.price.toString(), '.') } + ' Đ'"></option>
                   </select>
-<!--                  <div>-->
-<!--                    <span class="form-label">Tổng tiền:</span>-->
-<!--                    <span class="form-label">Thời lượng dự kiến:</span>-->
-<!--                  </div>-->
-                  <button onclick="addService()" class="add-service-button">Thêm dịch vụ</button>
+
+                  <button type="button" onclick="addService(); updateTotalPrice();" class="add-service-button">Thêm dịch vụ</button>
                 </div>
 
-                <div id="selectedServices">
+                <div id="selectedServices" name="idHairDetails">
                   <!-- Các dịch vụ đã chọn sẽ được hiển thị ở đây -->
                 </div>
 
                 <div id="totalPrice" >
-                  <!-- Tổng tiền --><h2 class="form-label">Total Price:</h2>
+                  <!-- Tổng tiền --><h2 class="form-label" >Total Price: <span id="totalPriceValue" ></span> </h2>
                 </div>
+
 
                 <div class="form-group">
                   <span class="form-label">Chọn kĩ thuật viên</span>
-                  <select class="form-select" type="text" id="stylistBooker" name="selectedStylist">
+                  <select class="form-select" type="text" id="stylistBooker" name="stylist">
                     <option th:each="stylist : ${stylists}" th:value="${stylist.value}" th:text="${stylist.name}"></option>
                   </select>
                 </div>
@@ -112,7 +110,7 @@
 
                 <div class="form-group">
                   <span class="form-label">Chọn ngày đặt lịch</span>
-                  <input class="form-control" type="date" required id="dayBooking">
+                  <input class="form-control" type="date"  id="dayBooking" onchange="formatInputDate()" name="dayBooking">
                 </div>
 
                 <div class="form-group">
@@ -145,7 +143,6 @@
                 <div class="form-group time-booking">
                   <div class="row">
                     <div class="col-2">
-
                       <button type="button" value="">16:00</button>
                     </div>
                     <div class="col-2">
@@ -190,145 +187,9 @@
 
 <!-- JS here -->
 
+
+
 <th:block th:replace="layout/js" />
-<script>
-  const page = {
-    urls: {
-      getAllServices: AppBase.API_SERVICES,
-      getAllStylist: AppBase.API_STYLIST,
-      createCustomer: AppBase.API_CUSTOMER,
-      deposit: AppBase.API_CUSTOMER + '/deposit'
-    },
-    elements: {},
-    loadData: {},
-    commands: {}
-  }
-
-  page.elements.serviceBooker = $('#serviceBooker');
-  page.commands.getAllServices = () => {
-    return $.ajax({
-      url: page.urls.getAllServices
-    })
-            .done((data) => {
-              console.log(data)
-              const services = data;
-
-              $.each(services, (index, item) => {
-
-                const str = renderOptionServices(item);
-
-                page.elements.serviceBooker.append(str);
-
-              })
-            })
-            .fail((error) => {
-              console.log(error);
-            })
-  }
-
-  const renderOptionServices = (obj) => {
-    return `<option value="${obj.id}">${obj.serviceName} - ${obj.price}</option>`;
-  }
-
-  page.elements.stylistBooker = $('#stylistBooker');
-  page.commands.getAllStylist = () => {
-    return $.ajax({
-      url: page.urls.getAllStylist
-    })
-            .done((data) => {
-              console.log(data)
-              const stylists = data;
-
-              $.each(stylists, (index, item) => {
-
-                const str = renderOptionStylists(item);
-
-                page.elements.stylistBooker.append(str);
-
-              })
-            })
-            .fail((error) => {
-              console.log(error);
-            })
-  }
-
-  const renderOptionStylists = (obj) => {
-    return `<option value="${obj.id}">${obj.stylistName}</option>`;
-  }
-
-  $(document).ready(function() {
-    page.elements.btnTimeBooking = $('.time-booking button');
-
-    page.elements.btnTimeBooking.on('click', function() {
-      // Đổi màu của nút được click
-      $(this).css('background-color', '#D19F68');
-      $(this).addClass('booking')
-
-      // Vô hiệu hóa các nút khác
-      page.elements.btnTimeBooking.not(this).css('background-color','#3498DB')
-    });
-  });
-
-  page.elements.btnBooking = $('#btnBooking')
-  page.elements.btnBooked = $('.booking')
-
-  page.commands.handleBooking = () => {
-    page.elements.btnBooking.attr('disabled', true);
-
-    let load = webToast.loading({
-      status: 'Loading...',
-      message: 'Please Wait a moment',
-      align: 'bottomright',
-      line: true,
-    });
-
-    setTimeout(() => {
-      $.ajax({
-        headers: {
-          'accept': 'application/json',
-          'content-type': 'application/json'
-        },
-        type: 'POST',
-        url: page.urls.getAllServices,
-        data: JSON.stringify(obj)
-      })
-              .done((data) => {
-                // const str = page.commands.renderCustomer(data);
-                // page.elements.tbCustomerBody.prepend(str);
-
-                // page.elements.modalCreate.modal('hide');
-
-                webToast.Success({
-                  status: 'Thêm mới thành công',
-                  message: '',
-                  delay: 2000,
-                  align: 'topright'
-                });
-
-              })
-              .fail((error) => {
-                console.log(error);
-              })
-              .always(() => {
-                page.elements.btnBooking.attr('disabled', false);
-                load.remove();
-              })
-    }, 1000);
-  }
-
-  page.loadData = () => {
-    page.commands.getAllServices();
-    page.commands.getAllStylist();
-  }
-
-  $(() => {
-    page.loadData();
-
-    // page.initializeControlEvent();
-  })
-
-
-</script>
 
 </body>
 
