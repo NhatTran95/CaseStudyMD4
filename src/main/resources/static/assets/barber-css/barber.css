@@ -23,7 +23,7 @@
     margin: 5px 0; /* Khoảng cách giữa các thẻ div con */
     padding: 5px; /* Khoảng cách giữa nội dung và biên của các thẻ div con */
     border-radius: 3px; /* Độ cong góc của các thẻ div con */
-    !important;
+!important;
 }
 
 /* CSS cho biểu tượng "X" */

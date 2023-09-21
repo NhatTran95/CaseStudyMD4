@@ -31,8 +31,10 @@ function addService() {
     // Tạo một thẻ span để chứa nội dung dịch vụ
     var serviceTextSpan = document.createElement("span");
     serviceTextSpan.textContent = serviceText;
+
     serviceTextSpan.setAttribute("valueData", serviceValue);
     serviceTextSpan.setAttribute("name", "idHairDetails");
+
 
     // Thêm biểu tượng và nội dung dịch vụ vào thẻ div
     serviceElement.appendChild(serviceTextSpan);
@@ -88,7 +90,9 @@ function deleteService(element) {
 }
 
 const bookingForm = document.getElementById('form-booking');
+
 const eSelectedHairDetails = document.getElementsByName('idHairDetails');
+
 const tBody = document.getElementById("tBody");
 const eSelectedStylist = document.getElementsByName('selectedStylist');
 const name = document.getElementById('nameBooker')
@@ -126,6 +130,8 @@ bookingForm.onsubmit = async (e) => {
 
     e.preventDefault();
     let data = getDataFromForm(bookingForm);
+    console.log(data)
+    const eSelectedHairDetails = document.querySelectorAll('#selectedServices span');
     console.log(eSelectedHairDetails)
     data = {
         ...data,

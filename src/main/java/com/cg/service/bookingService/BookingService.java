@@ -8,18 +8,14 @@ import com.cg.domain.HairDetail;
 import com.cg.repository.*;
 import com.cg.service.bookingService.bookingRequest.BookingSaveRequest;
 import com.cg.service.bookingService.bookingResponse.BookingListResponse;
-import com.cg.service.hairDetailService.HairDetailService;
-import com.cg.utils.AppUtil;
+import com.cg.utils.AppUtils;
 import lombok.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,12 +35,12 @@ public class BookingService {
 
     private final ICustomerRepository customerRepository;
 
-    private final IUserRepository userRepository;
+    private final UserRepository userRepository;
 
     public Page<BookingListResponse> getAll(Pageable pageable, String search){
         search = "%" + search + "%";
         return bookingRepository.searchEverything(search ,pageable).map(e -> {
-            var result = AppUtil.mapper.map(e, BookingListResponse.class);
+            var result = AppUtils.mapper.map(e, BookingListResponse.class);
             result.setStylist(e.getStylist().getName());
             if(e.getCustomer() == null){
                 result.setRole(e.getUser().getRole().toString());
@@ -58,7 +54,7 @@ public class BookingService {
         });
     }
     public void create(BookingSaveRequest request){
-        var book = AppUtil.mapper.map(request, Booking.class);
+        var book = AppUtils.mapper.map(request, Booking.class);
         String dateTimeBooking = request.getDayBooking() +'T'+ request.getTimeBooking();
         LocalDateTime dateTimeBook = LocalDateTime.parse(dateTimeBooking);
         book.setDayTimeBooking(dateTimeBook);
@@ -68,7 +64,7 @@ public class BookingService {
         }
         book.setTotalPrice(totalPrice);
         book.setStatus(EStatusBooking.valueOf("UNPAID"));
-        var customer = AppUtil.mapper.map(request, Customer.class);
+        var customer = AppUtils.mapper.map(request, Customer.class);
         customerRepository.save(customer);
         book.setCustomer(customer);
         bookingRepository.save(book);
@@ -78,7 +74,6 @@ public class BookingService {
                 .stream()
                 .map(id -> new BookingDetail(finalBook, new HairDetail(Long.valueOf(id)),request.getName(),hairDetailRepository.findById(Long.valueOf(id)).get().getPrice()))
                 .collect(Collectors.toList()));
-
     }
 
 }
