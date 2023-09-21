@@ -55,5 +55,14 @@ public class HomeController {
 
     }
 
+    @GetMapping("/serviceHair")
+    public String showServiceHairPage() {
+        return "admin/service";
+
+    }
+
+
+
+
 
 }

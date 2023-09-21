@@ -2,41 +2,41 @@ package com.cg.service.hairDetailImageService;
 
 import com.cg.domain.HairDetailImage;
 import com.cg.repository.IHairDetailImageRepository;
+import com.cg.utils.UploadUtils;
+import com.cloudinary.Cloudinary;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Optional;
+import java.io.IOException;
+
 
 @AllArgsConstructor
 @Service
 @Transactional
-public class HairDetailImageService implements IHairDetailImageService{
+public class HairDetailImageService  {
 
-    private final IHairDetailImageRepository hairDetailImageRepository;
-    @Override
-    public List<HairDetailImage> findAll() {
-        return null;
-    }
+    private final Cloudinary cloudinary;
 
-    @Override
-    public Optional<HairDetailImage> findById(String id) {
-        return Optional.empty();
-    }
+    private final IHairDetailImageRepository fileRepository;
 
-    @Override
-    public HairDetailImage save(HairDetailImage hairDetailImage) {
-        return null;
-    }
+    private final UploadUtils uploadUtils;
 
-    @Override
-    public void delete(HairDetailImage hairDetailImage) {
+    public HairDetailImage saveAvatar(MultipartFile avatar) throws IOException {
+        var file = new HairDetailImage();
+        fileRepository.save(file);
 
-    }
+        var uploadResult = cloudinary.uploader().upload(avatar.getBytes(), uploadUtils.buildImageUploadParams(file));
 
-    @Override
-    public void deleteById(String s) {
+        String fileUrl = (String) uploadResult.get("secure_url");
+        String fileFormat = (String) uploadResult.get("format");
 
+        file.setFileName(file.getId() + "." + fileFormat);
+        file.setFileUrl(fileUrl);
+        file.setFileFolder(UploadUtils.IMAGE_UPLOAD_FOLDER);
+        file.setCloudId(file.getFileFolder() + "/" + file.getId());
+        fileRepository.save(file);
+        return file;
     }
 }

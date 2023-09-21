@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "stylists")
 @Getter
@@ -24,8 +26,8 @@ public class Stylist {
     @Enumerated(EnumType.STRING)
     private EGender gender;
 
-    @OneToOne
-    private StylistImage stylistImage;
+    @OneToMany(mappedBy = "stylist")
+    private List<StylistImage> stylistImage;
 
     @Enumerated(EnumType.STRING)
     private EStatusStylist status;

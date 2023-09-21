@@ -11,3 +11,9 @@
 #sortPrice i {
     display: none;
 }
+.image-container img{
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    margin-right: 1em;
+}

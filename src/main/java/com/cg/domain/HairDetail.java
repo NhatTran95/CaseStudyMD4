@@ -30,8 +30,8 @@ public class HairDetail {
     @OneToMany (mappedBy = "hairDetail")
     private List<BookingDetail> bookingDetailLs;
 
-    @OneToOne
-    private HairDetailImage hairDetailImage;
+    @OneToMany(mappedBy = "hairDetail")
+    private List<HairDetailImage> hairDetailImages;
 
     public HairDetail(Long id){
         this.id = id;

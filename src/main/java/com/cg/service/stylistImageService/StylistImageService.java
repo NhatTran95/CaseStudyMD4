@@ -1,42 +1,47 @@
 package com.cg.service.stylistImageService;
 
+import com.cg.domain.HairDetailImage;
 import com.cg.domain.StylistImage;
+import com.cg.repository.IHairDetailImageRepository;
 import com.cg.repository.IStylistImageRepository;
+import com.cg.service.IGeneralService;
+import com.cg.utils.UploadUtils;
+import com.cloudinary.Cloudinary;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
 @Service
 @Transactional
-public class StylistImageService implements IStylistImageService{
+public class StylistImageService  {
 
-    private final IStylistImageRepository stylistImageRepository;
-    @Override
-    public List<StylistImage> findAll() {
-        return null;
-    }
+    private final Cloudinary cloudinary;
 
-    @Override
-    public Optional<StylistImage> findById(String id) {
-        return Optional.empty();
-    }
+    private final IStylistImageRepository fileRepository;
 
-    @Override
-    public StylistImage save(StylistImage stylistImage) {
-        return null;
-    }
+    private final UploadUtils uploadUtils;
 
-    @Override
-    public void delete(StylistImage stylistImage) {
 
-    }
+    public StylistImage saveAvatar(MultipartFile avatar)throws IOException {
+        var file = new StylistImage();
+        fileRepository.save(file);
 
-    @Override
-    public void deleteById(String s) {
+        var uploadResult = cloudinary.uploader().upload(avatar.getBytes(), uploadUtils.buildImageStylistUploadParams(file));
 
+        String fileUrl = (String) uploadResult.get("secure_url");
+        String fileFormat = (String) uploadResult.get("format");
+
+        file.setFileName(file.getId() + "." + fileFormat);
+        file.setFileUrl(fileUrl);
+        file.setFileFolder(UploadUtils.IMAGE_UPLOAD_FOLDER);
+        file.setCloudId(file.getFileFolder() + "/" + file.getId());
+        fileRepository.save(file);
+        return file;
     }
 }

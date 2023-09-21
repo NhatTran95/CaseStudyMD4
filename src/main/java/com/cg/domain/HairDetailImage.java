@@ -1,5 +1,6 @@
 package com.cg.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,4 +37,7 @@ public class HairDetailImage {
     @Column(name = "cloud_id")
     private String cloudId;
 
+    @ManyToOne
+    @JsonIgnore
+    private HairDetail hairDetail;
 }
