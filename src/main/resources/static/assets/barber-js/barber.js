@@ -17,6 +17,7 @@ function addService() {
     // Lấy giá trị đã chọn từ ô select
     var selectedService = document.getElementById("serviceBooker");
     var serviceText = selectedService.options[selectedService.selectedIndex].text;
+    var serviceValue = selectedService.options[selectedService.selectedIndex].value;
 
     // Tạo một thẻ div mới để hiển thị dịch vụ đã chọn
     var serviceElement = document.createElement("div");
@@ -30,6 +31,8 @@ function addService() {
     // Tạo một thẻ span để chứa nội dung dịch vụ
     var serviceTextSpan = document.createElement("span");
     serviceTextSpan.textContent = serviceText;
+    // Thêm thuộc tính "value" vào thẻ <span>
+    serviceTextSpan.setAttribute("value", `${serviceValue}`);
 
     // Thêm biểu tượng và nội dung dịch vụ vào thẻ div
     serviceElement.appendChild(serviceTextSpan);
@@ -85,7 +88,7 @@ function deleteService(element) {
 }
 
 const bookingForm = document.getElementById('form-booking');
-const eSelectedHairDetails = document.querySelectorAll(`#selectedServices span`);
+
 const tBody = document.getElementById("tBody");
 const eSelectedStylist = document.getElementsByName('selectedStylist');
 const name = document.getElementById('nameBooker')
@@ -117,6 +120,8 @@ let rooms = [];
 bookingForm.onsubmit = async (e) => {
     e.preventDefault();
     let data = getDataFromForm(bookingForm);
+    console.log(data)
+    const eSelectedHairDetails = document.querySelectorAll('#selectedServices span');
     console.log(eSelectedHairDetails)
     data = {
         ...data,

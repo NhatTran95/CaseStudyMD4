@@ -2,27 +2,32 @@ package com.cg.domain;
 
 import com.cg.domain.Enum.ERole;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private String phone;
+
+    @Column(unique = true)
     private String username;
+
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    private ERole role;
+    @Column(unique = true)
+    private String email;
 
+    private String fullName;
+
+    @Column(unique = true)
+    private String phoneNumber;
+
+    @Enumerated(value = EnumType.STRING)
+    private ERole role;
 }

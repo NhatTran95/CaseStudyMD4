@@ -1,4 +1,4 @@
-$("#register").hide();
+
 $("#signup-box-link").click(function(){
     $("#login").fadeOut(100);
     $("#register").delay(100).fadeIn(100);
