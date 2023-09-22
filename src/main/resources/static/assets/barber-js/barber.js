@@ -1,18 +1,18 @@
 
 var timeBooking;
-$(document).ready(function() {
-    const btnTimeBooking = $('.time-booking button');
-
-    btnTimeBooking.on('click', function() {
-        // Đổi màu của nút được click
-        $(this).css('background-color', '#D19F68');
-        $(this).addClass('booking')
-        timeBooking = $(this).text();
-
-        // Vô hiệu hóa các nút khác
-        btnTimeBooking.not(this).css('background-color','#3498DB')
-    });
-});
+// $(document).ready(function() {
+//     const btnTimeBooking = $('.time-booking button');
+//
+//     btnTimeBooking.on('click', function() {
+//         // Đổi màu của nút được click
+//         $(this).css('background-color', '#D19F68');
+//         $(this).addClass('booking')
+//         timeBooking = $(this).text();
+//
+//         // Vô hiệu hóa các nút khác
+//         btnTimeBooking.not(this).css('background-color','#3498DB')
+//     });
+// });
 function addService() {
     // Lấy giá trị đã chọn từ ô select
     var selectedService = document.getElementById("serviceBooker");
@@ -77,6 +77,85 @@ function formatInputDate() {
     dateInput.value = formattedDate;
 }
 
+async function showTimeFree(element) {
+    var id = element.value;
+    const dateInput = document.getElementById("dayBooking");
+    var date = dateInput.value;
+
+    const res = await fetch('/api/bookings/' + id + '/' + date);
+    console.log(res);
+    const responseJson = await res.json();
+    console.log(responseJson)
+
+    $(document).ready(function() {
+        const btnTimeBooking = $('.time-booking button');
+        btnTimeBooking.css('background-color', '#3498DB');
+        btnTimeBooking.prop('disabled', false);
+        btnTimeBooking.each(function() {
+            var btnValue = $(this).text();
+
+            if (responseJson.includes(btnValue)) {
+
+                $(this).prop('disabled', true);
+                $(this).css('background-color', 'red');
+                $(this).addClass('red-button')
+            }
+        });
+
+        btnTimeBooking.on('click', function() {
+            // Đổi màu của nút được click
+            $(this).css('background-color', '#D19F68');
+            $(this).addClass('booking');
+            timeBooking = $(this).text();
+
+            // Vô hiệu hóa các nút khác
+            btnTimeBooking.not(this).not('.red-button').css('background-color', '#3498DB');
+
+            // Vô hiệu hóa các nút có giá trị giống với các phần tử trong mảng res
+
+        });
+    });
+}
+
+async function showTimeFreeDate(element) {
+    var date = element.value;
+    const idE = document.getElementById("stylistBooker");
+    var id = idE.value;
+
+    const res = await fetch('/api/bookings/' + id + '/' + date);
+    console.log(res);
+    const responseJson = await res.json();
+    console.log(responseJson)
+
+    $(document).ready(function() {
+        const btnTimeBooking = $('.time-booking button');
+        btnTimeBooking.css('background-color', '#3498DB');
+        btnTimeBooking.prop('disabled', false);
+        btnTimeBooking.each(function() {
+            var btnValue = $(this).text();
+
+            if (responseJson.includes(btnValue)) {
+
+                $(this).prop('disabled', true);
+                $(this).css('background-color', 'red');
+                $(this).addClass('red-button')
+            }
+        });
+
+        btnTimeBooking.on('click', function() {
+            // Đổi màu của nút được click
+            $(this).css('background-color', '#D19F68');
+            $(this).addClass('booking');
+            timeBooking = $(this).text();
+
+            // Vô hiệu hóa các nút khác
+            btnTimeBooking.not(this).not('.red-button').css('background-color', '#3498DB');
+
+            // Vô hiệu hóa các nút có giá trị giống với các phần tử trong mảng res
+
+        });
+    });
+}
 
 function deleteService(element) {
     // Lấy thẻ div chứa biểu tượng "X"
@@ -131,8 +210,7 @@ bookingForm.onsubmit = async (e) => {
     e.preventDefault();
     let data = getDataFromForm(bookingForm);
     console.log(data)
-    const eSelectedHairDetails = document.querySelectorAll('#selectedServices span');
-    console.log(eSelectedHairDetails)
+
     data = {
         ...data,
         stylist: {
@@ -142,6 +220,7 @@ bookingForm.onsubmit = async (e) => {
         timeBooking: timeBooking + ":00",
         id: bookingSelected.id
     }
+
     console.log(data)
         await createBooking(data)
 
@@ -173,5 +252,7 @@ async function createBooking(data) {
         body: JSON.stringify(data)
     })
 }
+
+
 
 

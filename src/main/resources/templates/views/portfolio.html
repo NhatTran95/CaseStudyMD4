@@ -19,14 +19,13 @@
   <!-- Header End -->
 
 <main>
-  <!--? Hero Start -->
   <div class="slider-area2">
     <div class="slider-height2 d-flex align-items-center">
       <div class="container">
         <div class="row">
           <div class="col-xl-12">
             <div class="hero-cap hero-cap2 pt-70 text-center">
-              <h2>Portfolio</h2>
+              <h2>Stylists</h2>
             </div>
           </div>
         </div>
@@ -34,38 +33,34 @@
     </div>
   </div>
   <!-- Hero End -->
-  <!--? Gallery Area Start -->
-  <div class="gallery-area section-padding30">
+  <!--? Services Area Start -->
+  <section class="service-area section-padding30">
     <div class="container">
-      <div class="row">
-        <div class="col-lg-4 col-md-6 col-sm-6">
-          <div class="box snake mb-30">
-            <div class="gallery-img " style="background-image: url(/assets/img/gallery/gallery1.png);"></div>
-            <div class="overlay"></div>
+      <!-- Section Tittle -->
+      <div class="row d-flex justify-content-center">
+        <div class="col-xl-7 col-lg-8 col-md-11 col-sm-11">
+          <div class="section-tittle text-center mb-90">
+            <span>sự hài lòng của bạn</span>
+            <h2>là niềm hạnh phúc của chúng tôi</h2>
           </div>
         </div>
-        <div class="col-lg-8 col-md-6 col-sm-6">
-          <div class="box snake mb-30">
-            <div class="gallery-img " style="background-image: url(/assets/img/gallery/gallery2.png);"></div>
-            <div class="overlay"></div>
-          </div>
-        </div>
-        <div class="col-lg-8 col-md-6 col-sm-6">
-          <div class="box snake mb-30">
-            <div class="gallery-img " style="background-image: url(/assets/img/gallery/gallery3.png);"></div>
-            <div class="overlay"></div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-6">
-          <div class="box snake mb-30">
-            <div class="gallery-img " style="background-image: url(/assets/img/gallery/gallery4.png);"></div>
-            <div class="overlay"></div>
+      </div>
+      <!-- Section caption -->
+      <div class="row" >
+        <div class="col-xl-4 col-lg-4 col-md-6" th:each="stylist:${stylists}">
+          <div class="services-caption text-center mb-30">
+            <div class="service-icon">
+              <img th:src="${stylist.images[0]}" style="height: 200px; width: 200px; border-radius: 100%">
+            </div>
+            <div class="service-cap">
+              <h4 th:text="${stylist.name}" style="font-size: large; margin-top: 10px"> </h4>
+              <button class="btn btn-danger" style="border-radius: 50px; margin-top: 30px; padding: 20px 30px"><a href="/booking">Book</a></button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- Gallery Area End -->
+  </section>
 </main>
 <footer>
   <!--? Footer Start-->

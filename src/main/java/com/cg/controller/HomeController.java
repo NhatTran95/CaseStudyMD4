@@ -1,5 +1,6 @@
 package com.cg.controller;
 
+import com.cg.service.bookingService.BookingService;
 import com.cg.service.hairDetailService.HairDetailService;
 import com.cg.service.stylistService.StylistService;
 import lombok.AllArgsConstructor;
@@ -13,6 +14,8 @@ public class HomeController {
     private final HairDetailService hairDetailService;
 
     private final StylistService stylistService;
+
+    private final BookingService bookingService;
 
     @GetMapping("/home")
     public String showHomePage() {
@@ -28,14 +31,20 @@ public class HomeController {
         return view;
     }
 
+
     @GetMapping("/services")
-    public String showServicePage() {
-        return "views/services";
+    public ModelAndView showServicePage(){
+        ModelAndView view = new ModelAndView("views/services");
+        view.addObject("hairDetails", hairDetailService.getAll());
+        return view;
     }
 
     @GetMapping("/portfolio")
-    public String showProtfokioPage() {
-        return "views/portfolio";
+    public ModelAndView showProtfolioPage() {
+        ModelAndView view = new ModelAndView("views/portfolio");
+        view.addObject("stylists", stylistService.getAll());
+        return view;
+
     }
 
     @GetMapping("/admin")
@@ -44,10 +53,6 @@ public class HomeController {
     }
 
 
-    @GetMapping("/login")
-    public String showLogin() {
-        return "/login";
-    }
 
     @GetMapping("/stylist")
     public String showStylistPage() {

@@ -9,7 +9,7 @@ import com.cg.service.dto.response.SelectOptionServiceResponse;
 import com.cg.service.hairDetailService.hairDetailRequest.HairDetailSaveRequest;
 import com.cg.service.hairDetailService.hairDetailResponse.HairDetailListResponse;
 import com.cg.service.hairDetailService.hairDetailResponse.HairDetailResponse;
-import com.cg.utils.AppUtil;
+import com.cg.utils.AppUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +37,7 @@ public class HairDetailService {
 
     public HairDetailResponse findById(Long id){
         var hairDetail = hairDetailRepository.findById(id).orElse(new HairDetail());
-        var result = AppUtil.mapper.map(hairDetail, HairDetailResponse.class);
+        var result = AppUtils.mapper.map(hairDetail, HairDetailResponse.class);
         List<String> images = hairDetail.getHairDetailImages()
                 .stream()
                 .map(HairDetailImage::getFileUrl)
@@ -61,7 +61,7 @@ public class HairDetailService {
     public Page<HairDetailListResponse> getHairDetails(Pageable pageable, String search){
         search = "%" + search + "%";
         return hairDetailRepository.searchEverything(search ,pageable).map(e -> {
-            var result = AppUtil.mapper.map(e, HairDetailListResponse.class);
+            var result = AppUtils.mapper.map(e, HairDetailListResponse.class);
             result.setImages(
                     e.getHairDetailImages().stream()
                             .map(HairDetailImage::getFileUrl)  // Lấy ra URL của mỗi ảnh
@@ -72,7 +72,7 @@ public class HairDetailService {
     }
 
     public void create(HairDetailSaveRequest request){
-        var hairDetail = AppUtil.mapper.map(request, HairDetail.class);
+        var hairDetail = AppUtils.mapper.map(request, HairDetail.class);
 
         hairDetail = hairDetailRepository.save(hairDetail);
         var files = fileRepository.findAllById(request.getFiles().stream().map(SelectOptionRequest::getId).collect(Collectors.toList()));
@@ -86,7 +86,7 @@ public class HairDetailService {
     public void update(HairDetailSaveRequest request, Long id) {
         var hairDetail = hairDetailRepository.findById(id).orElse(new HairDetail());
 //        var hairDetail = AppUtil.mapper.map(request, HairDetail.class);
-        AppUtil.mapper.map(request, hairDetail);
+        AppUtils.mapper.map(request, hairDetail);
         hairDetail = hairDetailRepository.save(hairDetail);
 
         for(HairDetailImage image: hairDetail.getHairDetailImages()){
@@ -109,5 +109,18 @@ public class HairDetailService {
         } else {
             return false; // Không tìm thấy phòng để xóa
         }
+    }
+
+    public List<HairDetailResponse> getAll() {
+        return hairDetailRepository.findAll().stream().map(hairDetail -> {
+            var result = new HairDetailResponse();
+            result.setName(hairDetail.getName());
+            result.setDescription(hairDetail.getDescription());
+            result.setPrice(hairDetail.getPrice());
+            List<String> images = hairDetail.getHairDetailImages().stream().map(HairDetailImage::getFileUrl)
+                    .collect(Collectors.toList());
+            result.setImages(images);
+            return result;
+        }).collect(Collectors.toList());
     }
 }

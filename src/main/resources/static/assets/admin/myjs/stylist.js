@@ -141,6 +141,17 @@ const genderPagination = () => {
 
 function renderItemStr(item) {
     const imagesHTML = item.images.map(imageUrl => `<img src="${imageUrl}" alt="" />`).join('');
+
+    const statusOptions = ['FREE', 'BUSY']; // Danh sách các status
+
+    const statusSelectOptions = statusOptions.map(status => {
+        if (status === item.status) {
+            return `<option value="${status}" selected>${status}</option>`; // Thêm thuộc tính selected nếu giá trị trùng khớp
+        } else {
+            return `<option value="${status}">${status}</option>`;
+        }
+    }).join(''); // Tạo các option cho ô select
+
     return `<tr>
                     <td>
                         ${item.id}
@@ -157,7 +168,7 @@ function renderItemStr(item) {
                         ${item.gender}
                     </td>
                     <td>
-                        ${item.status}
+                        <select class="status-select" data-item-id="${item.id}">${statusSelectOptions}</select>
                     </td>
                     
                     
@@ -177,6 +188,17 @@ function renderItemStr(item) {
                     </td>
                 </tr>`
 }
+
+document.addEventListener('change', async function(event) {
+    const target = event.target;
+    if (target.classList.contains('status-select')) {
+        const itemId = target.getAttribute('data-item-id');
+        const newStatus = target.value;
+        const res = await fetch('/api/stylists/' + itemId + '/' + newStatus, {
+            method: 'PATCH',
+        });
+    }
+});
 
 window.onload = async () => {
     await renderTable()
@@ -426,3 +448,6 @@ function enableSaveChangesButton() {
     const saveChangesButton = document.getElementById('saveChangesButton');
     saveChangesButton.disabled = false;
 }
+
+
+
