@@ -1,3 +1,29 @@
+// Lấy các phần tử từ DOM
+
+const logoutButton = document.querySelector("#logout-button");
+$(document).ready(function (){
+    const avatar = document.querySelector("#user-avatar");
+    const dropdownMenu = document.querySelector("#dropdown-menu");
+    avatar.addEventListener("click", function () {
+        if (dropdownMenu.style.display == "block") {
+            dropdownMenu.style.display = "none";
+        } else {
+            dropdownMenu.style.display = "block";
+        }
+    });
+})
+// Xử lý khi người dùng bấm vào biểu tượng avatar
+
+
+
+// Đóng dropdown menu khi người dùng bấm ra ngoài
+window.addEventListener("click", function (event) {
+    const dropdownMenu = document.querySelector("#dropdown-menu");
+    if (!event.target.matches("#user-avatar")) {
+        dropdownMenu.style.display = "none";
+    }
+});
+
 
 var timeBooking;
 $(document).ready(function() {
@@ -131,7 +157,6 @@ bookingForm.onsubmit = async (e) => {
     e.preventDefault();
     let data = getDataFromForm(bookingForm);
     console.log(data)
-    const eSelectedHairDetails = document.querySelectorAll('#selectedServices span');
     console.log(eSelectedHairDetails)
     data = {
         ...data,
@@ -173,5 +198,7 @@ async function createBooking(data) {
         body: JSON.stringify(data)
     })
 }
+
+
 
 

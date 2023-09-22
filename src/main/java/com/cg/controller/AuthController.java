@@ -4,6 +4,7 @@ import com.cg.service.auth.AuthService;
 import com.cg.service.auth.request.RegisterRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,8 +21,6 @@ public class AuthController {
     public String showLogin(){
         return "/login";
     }
-
-
 
     @GetMapping("/register")
     public String showRegistrationForm(Model model){

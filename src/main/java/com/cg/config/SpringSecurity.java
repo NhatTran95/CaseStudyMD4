@@ -29,24 +29,29 @@ public class SpringSecurity {
         http.csrf().disable()
                 .authorizeHttpRequests((authorize) ->
                         authorize.requestMatchers("/register/**").permitAll()
-                                .requestMatchers("/index").permitAll()
-                                .requestMatchers("/products").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/home","/booking","/services","/portfolio").permitAll()
+                                .requestMatchers("/admin").hasRole("ADMIN")
+                                .requestMatchers("/stylist").hasRole("ADMIN")
+                                .requestMatchers("/serviceHair").hasRole("ADMIN")
                                 .requestMatchers("/api/**").permitAll()
                                 .requestMatchers("/assets/**").permitAll()
                                 .anyRequest().authenticated()
+
                 ).formLogin(
                         form -> form
                                 .loginPage("/login")
                                 .loginProcessingUrl("/login")
-                                .defaultSuccessUrl("/home")
+                                .defaultSuccessUrl("/default")
                                 .permitAll()
                 ).logout(
                         logout -> logout
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                                 .permitAll()
                 );
+
         return http.build();
     }
+
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {

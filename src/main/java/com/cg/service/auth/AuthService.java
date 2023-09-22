@@ -6,6 +6,7 @@ import com.cg.repository.UserRepository;
 import com.cg.service.auth.request.RegisterRequest;
 import com.cg.utils.AppUtils;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,6 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -26,7 +30,7 @@ public class AuthService implements UserDetailsService {
 
     public void register(RegisterRequest request){
         var user = AppUtils.mapper.map(request, User.class);
-        user.setRole(ERole.USER);
+        user.setRole(ERole.ROLE_USER);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
@@ -57,7 +61,10 @@ public class AuthService implements UserDetailsService {
 
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), role);
     }
-    // để làm 1. kiểm tra xem user có tồn tại trong hệ thông hay không và tìm bằng 3 field Username Email PhoneNumber
-    // 2. Nếu có thì sẽ trả về User của .security.core.userdetails.User để nó lưu vô kho spring sercurity context holder
-    // 3. nếu không thì trả ra message lỗi User not Exist
+
+    private Collection<? extends GrantedAuthority> getAuthorities(User user) {
+        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
+        return authorities;
+    }
 }

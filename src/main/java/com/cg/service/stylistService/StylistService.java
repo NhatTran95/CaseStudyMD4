@@ -13,7 +13,7 @@ import com.cg.service.hairDetailService.hairDetailResponse.HairDetailResponse;
 import com.cg.service.stylistService.stylistRequest.StylistSaveRequest;
 import com.cg.service.stylistService.stylistResponse.StylistDetailResponse;
 import com.cg.service.stylistService.stylistResponse.StylistListResponse;
-import com.cg.utils.AppUtil;
+import com.cg.utils.AppUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +37,7 @@ public class StylistService {
 
     public StylistDetailResponse findById(Long id){
         var stylist = stylistRepository.findById(id).orElse(new Stylist());
-        var result = AppUtil.mapper.map(stylist, StylistDetailResponse.class);
+        var result = AppUtils.mapper.map(stylist, StylistDetailResponse.class);
         List<String> images = stylist.getStylistImage()
                 .stream()
                 .map(StylistImage::getFileUrl)
@@ -48,7 +48,7 @@ public class StylistService {
 
     public Page<StylistListResponse> getStylists(Pageable pageable) {
         return stylistRepository.findAll(pageable).map(e -> {
-            var result = AppUtil.mapper.map(e, StylistListResponse.class);
+            var result = AppUtils.mapper.map(e, StylistListResponse.class);
             result.setImages(
                     e.getStylistImage().stream()
                             .map(StylistImage::getFileUrl)  // Lấy ra URL của mỗi ảnh
@@ -59,7 +59,7 @@ public class StylistService {
     }
 
     public void create(StylistSaveRequest request) {
-        var stylist = AppUtil.mapper.map(request, Stylist.class);
+        var stylist = AppUtils.mapper.map(request, Stylist.class);
 
         stylist = stylistRepository.save(stylist);
         var files = fileRepository.findAllById(request.getFiles().stream().map(SelectOptionRequest::getId).collect(Collectors.toList()));
@@ -71,7 +71,7 @@ public class StylistService {
 
     public void update(StylistSaveRequest request, Long id) {
         var stylist = stylistRepository.findById(id).orElse(new Stylist());
-        AppUtil.mapper.map(request, stylist);
+        AppUtils.mapper.map(request, stylist);
         stylist = stylistRepository.save(stylist);
 
         for(StylistImage image: stylist.getStylistImage()){

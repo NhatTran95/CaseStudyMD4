@@ -63,14 +63,20 @@
                   <div class="col-6">
                     <div class="form-group">
                       <span class="form-label">Họ và tên</span>
-                      <input class="form-control" type="text" placeholder="Enter your name" id="nameBooker" name="name">
+                      <th:block>
+                        <input class="form-control" type="text" placeholder="Enter your name" id="nameBooker" name="name" th:value="${user.fullName}" th:if="${user != null}">
+                      </th:block>
+                      <input class="form-control" type="text" placeholder="Enter your name" id="nameBooker" name="name" th:if="${user == null}">
                     </div>
                   </div>
 
                   <div class="col-6">
                     <div class="form-group">
                       <span class="form-label">Số điện thoại</span>
-                      <input class="form-control" type="tel" placeholder="Enter your phone number" id="phoneBooker" name="phoneNumber">
+                      <th:block>
+                        <input class="form-control" type="tel" placeholder="Enter your phone number" id="phoneBooker" name="phoneNumber" th:value="${user.phoneNumber}" th:if="${user != null}">
+                      </th:block>
+                      <input class="form-control" type="tel" placeholder="Enter your phone number" id="phoneBooker" name="phoneNumber" th:if="${user == null}">
                     </div>
                   </div>
                 </div>
@@ -188,7 +194,14 @@
 <!-- JS here -->
 
 
-
+<script th:if="${user != null}">
+  const nameBooker = document.getElementById("nameBooker");
+  const phoneBooker = document.getElementById("phoneBooker");
+  if (nameBooker && phoneBooker) {
+    nameBooker.setAttribute("disabled", "true");  
+    phoneBooker.setAttribute("disabled", "true");
+  }
+</script>
 <th:block th:replace="layout/js" />
 
 </body>
