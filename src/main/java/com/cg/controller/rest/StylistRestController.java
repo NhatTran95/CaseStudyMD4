@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 public class StylistRestController {
     private final StylistService stylistService;
 
+
+
     @GetMapping
     public ResponseEntity<Page<StylistListResponse>> getHairDetails(@PageableDefault(size = 5) Pageable pageable){
         return new ResponseEntity<>(stylistService.getStylists(pageable), HttpStatus.OK);
@@ -48,6 +50,12 @@ public class StylistRestController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @PatchMapping("/{id}/{status}")
+    public ResponseEntity<?> changeStatus(@PathVariable Long id, @PathVariable String status) {
+        stylistService.changeStatus(id, status);
+        return ResponseEntity.ok().build();
     }
 
 }

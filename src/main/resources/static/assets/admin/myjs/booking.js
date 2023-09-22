@@ -117,34 +117,40 @@ const onLoadSort = () => {
 }
 
 function renderItemStr(item) {
+    const statusOptions = ['PAID', 'UNPAID', 'CANCELLED']; // Danh sách các status
+
+    const statusSelectOptions = statusOptions.map(status => {
+        if (status === item.status) {
+            return `<option value="${status}" selected>${status}</option>`; // Thêm thuộc tính selected nếu giá trị trùng khớp
+        } else {
+            return `<option value="${status}">${status}</option>`;
+        }
+    }).join(''); // Tạo các option cho ô select
+
     return `<tr>
-                    <td>
-                        ${item.id}
-                    </td>
-                    <td>
-                        ${item.name}
-                    </td>
-                    <td>
-                        ${item.dayTimeBooking}
-                    </td>
-                    <td>
-                        ${item.phoneNumber}
-                    </td>
-                    <td>
-                       ${item.bookingDetails}
-                    </td>            
-                    <td>
-                        ${item.totalPrice}
-                    </td>       
-                    <td>
-                        ${item.stylist}
-                    </td>
-                    <td>
-                        ${item.status}
-                    </td>                   
-                   
-                </tr>`
+        <td>${item.id}</td>
+        <td>${item.name}</td>
+        <td>${item.dayTimeBooking}</td>
+        <td>${item.phoneNumber}</td>
+        <td>${item.bookingDetails}</td>
+        <td>${item.totalPrice}</td>
+        <td>${item.stylist}</td>
+        <td>
+            <select class="status-select" data-item-id="${item.id}">${statusSelectOptions}</select> <!-- Ô select option -->
+        </td>                   
+    </tr>`;
 }
+
+document.addEventListener('change', async function(event) {
+    const target = event.target;
+    if (target.classList.contains('status-select')) {
+        const itemId = target.getAttribute('data-item-id');
+        const newStatus = target.value;
+        const res = await fetch('/api/bookings/' + itemId + '/' + newStatus, {
+            method: 'PATCH',
+        });
+    }
+});
 
 
 window.onload = async () => {
@@ -165,3 +171,5 @@ const findById = async (id) => {
     return await response.json();
 
 }
+
+

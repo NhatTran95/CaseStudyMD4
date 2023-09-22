@@ -1,10 +1,12 @@
 package com.cg.controller.rest;
 
+import com.cg.domain.Enum.EStatusBooking;
 import com.cg.exception.DataInputException;
 import com.cg.service.bookingService.BookingService;
 import com.cg.service.bookingService.bookingRequest.BookingSaveRequest;
 import com.cg.service.bookingService.bookingResponse.BookingListResponse;
 import com.cg.service.stylistService.StylistService;
+import com.cg.service.stylistService.stylistRequest.StylistSaveRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +14,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/bookings")
@@ -38,6 +42,19 @@ public class BookingRestController {
 
         return ResponseEntity.ok().build();
     }
+
+    @PatchMapping("/{id}/{status}")
+    public ResponseEntity<?> changeStatus(@PathVariable Long id, @PathVariable String status) {
+        bookingService.changeStatus(id, status);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}/{date}")
+    public ResponseEntity<List<String>> getTimesBooked(@PathVariable Long id, @PathVariable String date) {
+        List<String> timesBooked = bookingService.getTimesStylist(id, date);
+        return ResponseEntity.ok(timesBooked);
+    }
+
 
 
 }

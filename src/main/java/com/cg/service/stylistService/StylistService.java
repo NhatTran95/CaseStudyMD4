@@ -1,9 +1,8 @@
 package com.cg.service.stylistService;
 
-import com.cg.domain.HairDetail;
-import com.cg.domain.HairDetailImage;
-import com.cg.domain.Stylist;
-import com.cg.domain.StylistImage;
+import com.cg.domain.*;
+import com.cg.domain.Enum.EStatusBooking;
+import com.cg.domain.Enum.EStatusStylist;
 import com.cg.repository.IStylistImageRepository;
 import com.cg.repository.IStylistRepository;
 import com.cg.service.dto.request.SelectOptionRequest;
@@ -30,7 +29,7 @@ public class StylistService {
     private final IStylistImageRepository fileRepository;
 
     public List<SelectOptionResponse> findAll(){
-        return stylistRepository.findAllByStatusFree().stream()
+        return stylistRepository.findAll().stream()
                 .map(stylist -> new SelectOptionResponse(stylist.getId().toString(), stylist.getName()))
                 .collect(Collectors.toList());
     }
@@ -98,5 +97,22 @@ public class StylistService {
         } else {
             return false; // Không tìm thấy phòng để xóa
         }
+    }
+
+    public void changeStatus(Long id, String status) {
+        var stylist = stylistRepository.findById(id).orElse(new Stylist());
+        stylist.setStatus(EStatusStylist.valueOf(status));
+        stylistRepository.save(stylist);
+    }
+
+    public List<StylistDetailResponse> getAll() {
+        return stylistRepository.findAll().stream().map(stylist -> {
+            var result = new StylistDetailResponse();
+            result.setName(stylist.getName());
+            List<String> images = stylist.getStylistImage().stream().map(StylistImage::getFileUrl)
+                    .collect(Collectors.toList());
+            result.setImages(images);
+            return result;
+        }).collect(Collectors.toList());
     }
 }

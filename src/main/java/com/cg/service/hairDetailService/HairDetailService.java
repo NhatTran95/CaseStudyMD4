@@ -110,4 +110,17 @@ public class HairDetailService {
             return false; // Không tìm thấy phòng để xóa
         }
     }
+
+    public List<HairDetailResponse> getAll() {
+        return hairDetailRepository.findAll().stream().map(hairDetail -> {
+            var result = new HairDetailResponse();
+            result.setName(hairDetail.getName());
+            result.setDescription(hairDetail.getDescription());
+            result.setPrice(hairDetail.getPrice());
+            List<String> images = hairDetail.getHairDetailImages().stream().map(HairDetailImage::getFileUrl)
+                    .collect(Collectors.toList());
+            result.setImages(images);
+            return result;
+        }).collect(Collectors.toList());
+    }
 }

@@ -1,13 +1,11 @@
 package com.cg.service.bookingService;
 
-import com.cg.domain.Booking;
-import com.cg.domain.BookingDetail;
-import com.cg.domain.Customer;
+import com.cg.domain.*;
 import com.cg.domain.Enum.EStatusBooking;
-import com.cg.domain.HairDetail;
 import com.cg.repository.*;
 import com.cg.service.bookingService.bookingRequest.BookingSaveRequest;
 import com.cg.service.bookingService.bookingResponse.BookingListResponse;
+import com.cg.service.dto.request.SelectOptionRequest;
 import com.cg.utils.AppUtils;
 import lombok.*;
 import org.springframework.data.domain.Page;
@@ -16,6 +14,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -74,6 +75,32 @@ public class BookingService {
                 .stream()
                 .map(id -> new BookingDetail(finalBook, new HairDetail(Long.valueOf(id)),request.getName(),hairDetailRepository.findById(Long.valueOf(id)).get().getPrice()))
                 .collect(Collectors.toList()));
+    }
+
+    public void changeStatus(Long id, String status) {
+        var booking = bookingRepository.findById(id).orElse(new Booking());
+        booking.setStatus(EStatusBooking.valueOf(status));
+        bookingRepository.save(booking);
+
+    }
+
+    public List<String> getTimesStylist(Long id, String date){
+        List <String> times = new ArrayList<>();
+        var bookings = bookingRepository.findBookingsByStylistId(id);
+        for(var booking : bookings){
+            var daytime = booking.getDayTimeBooking();
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+            // Lấy day và time dưới dạng chuỗi
+            String day = daytime.format(dateFormatter);
+            String time = daytime.format(timeFormatter);
+
+            if(day.equals(date)){
+                times.add(time);
+            }
+        }
+        return times;
     }
 
 }

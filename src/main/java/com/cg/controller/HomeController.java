@@ -1,7 +1,10 @@
 package com.cg.controller;
 
+
 import com.cg.domain.User;
 import com.cg.repository.UserRepository;
+
+import com.cg.service.bookingService.BookingService;
 import com.cg.service.hairDetailService.HairDetailService;
 import com.cg.service.stylistService.StylistService;
 import lombok.AllArgsConstructor;
@@ -25,6 +28,8 @@ public class HomeController {
     private final UserRepository userRepository;
 
     private final StylistService stylistService;
+
+    private final BookingService bookingService;
 
     @GetMapping("/home")
     public String showHomePage(Model model, Authentication authentication) {
@@ -68,6 +73,7 @@ public class HomeController {
         return view;
     }
 
+
     @GetMapping("/services")
     public String showServicePage(Model model, Authentication authentication) {
         if(authentication == null){
@@ -102,6 +108,7 @@ public class HomeController {
             model.addAttribute("isUser",true);
         }
         return "views/portfolio";
+
     }
 
 

@@ -58,7 +58,7 @@
               <div class="form-header">
                 <h1 style="color: #D19F68;">ĐẶT LỊCH</h1>
               </div>
-              <form method="post" action="" id="form-booking">
+              <form id="form-booking">
                 <div class="row">
                   <div class="col-6">
                     <div class="form-group">
@@ -108,15 +108,16 @@
 
                 <div class="form-group">
                   <span class="form-label">Chọn kĩ thuật viên</span>
-                  <select class="form-select" type="text" id="stylistBooker" name="stylist">
-                    <option th:each="stylist : ${stylists}" th:value="${stylist.value}" th:text="${stylist.name}"></option>
+                  <select class="form-select" type="text" id="stylistBooker" name="stylist" onchange="showTimeFree(this)">
+                    <option th:each="stylist : ${stylists}" th:value="${stylist.value}" th:text="${stylist.name}" >
+                    </option>
                   </select>
                 </div>
 
 
                 <div class="form-group">
                   <span class="form-label">Chọn ngày đặt lịch</span>
-                  <input class="form-control" type="date"  id="dayBooking" onchange="formatInputDate()" name="dayBooking">
+                  <input class="form-control" type="date"  id="dayBooking" onchange="formatInputDate(); showTimeFreeDate(this)" name="dayBooking">
                 </div>
 
                 <div class="form-group">
@@ -170,7 +171,7 @@
                 </div>
 
                 <div class="form-btn">
-                  <button class="btn header-btn" style="width: 100%; margin: 25px 0;" id="btnBooking">Book Now</button>
+                  <button type= "submit" class="btn header-btn" style="width: 100%; margin: 25px 0;" id="btnBooking">Book Now</button>
                 </div>
               </form>
             </div>
