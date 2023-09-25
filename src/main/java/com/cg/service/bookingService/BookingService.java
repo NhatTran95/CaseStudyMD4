@@ -10,6 +10,8 @@ import com.cg.utils.AppUtils;
 import lombok.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -17,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,9 +68,18 @@ public class BookingService {
         }
         book.setTotalPrice(totalPrice);
         book.setStatus(EStatusBooking.valueOf("UNPAID"));
-        var customer = AppUtils.mapper.map(request, Customer.class);
-        customerRepository.save(customer);
-        book.setCustomer(customer);
+        if(request.getIdUser().equals("")){
+            var customer = AppUtils.mapper.map(request, Customer.class);
+            customerRepository.save(customer);
+            book.setCustomer(customer);
+        } else {
+            Optional<User> user = userRepository.findById(Long.valueOf(request.getIdUser()));
+            User userBook = user.get();
+            book.setName(userBook.getFullName());
+            book.setPhoneNumber(userBook.getPhoneNumber());
+            book.setUser(userBook);
+        }
+
         bookingRepository.save(book);
         Booking finalBook = book;
         bookingDetailRepository.saveAll(request

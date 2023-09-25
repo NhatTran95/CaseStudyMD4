@@ -1,4 +1,11 @@
-// Lấy các phần tử từ DOM
+const divTimeButton = $('#div-time-button')
+const divTimeButtonRow = $('#div-time-button .row')
+var timeBooking;
+
+
+const timeArr = [
+    "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"
+]
 
 const logoutButton = document.querySelector("#logout-button");
 $(document).ready(function (){
@@ -25,20 +32,33 @@ window.addEventListener("click", function (event) {
 });
 
 
-var timeBooking;
-// $(document).ready(function() {
-//     const btnTimeBooking = $('.time-booking button');
-//
-//     btnTimeBooking.on('click', function() {
-//         // Đổi màu của nút được click
-//         $(this).css('background-color', '#D19F68');
-//         $(this).addClass('booking')
-//         timeBooking = $(this).text();
-//
-//         // Vô hiệu hóa các nút khác
-//         btnTimeBooking.not(this).css('background-color','#3498DB')
-//     });
-// });
+
+// Lấy thẻ input theo id
+const dateInput = document.getElementById('dayBooking');
+
+// Lấy ngày hiện tại và chuyển định dạng thành yyyy-MM-dd (giống với định dạng của input date)
+const currentDate = new Date();
+const currentDateString = currentDate.toISOString().split('T')[0];
+
+// Gán giá trị min cho input là ngày hiện tại
+dateInput.min = currentDateString;
+
+// Thêm sự kiện 'input' để kiểm tra ngày khi người dùng thay đổi giá trị
+dateInput.addEventListener('input', function() {
+    const selectedDate = new Date(dateInput.value);
+    // Cắt bỏ phần giờ, phút, giây và mili giây để so sánh chỉ phần ngày
+    const selectedDateString = selectedDate.toISOString().split('T')[0];
+    const currentDateString = currentDate.toISOString().split('T')[0];
+    console.log(selectedDateString);
+    console.log(currentDateString)
+    if (selectedDateString < currentDateString) {
+        // Nếu ngày chọn nhỏ hơn ngày hiện tại, đặt giá trị của input thành ngày hiện tại
+        dateInput.value = currentDateString;
+        alert('Không thể chọn ngày trước ngày hiện tại.');
+    }
+});
+
+
 function addService() {
     // Lấy giá trị đã chọn từ ô select
     var selectedService = document.getElementById("serviceBooker");
@@ -112,36 +132,10 @@ async function showTimeFree(element) {
     console.log(res);
     const responseJson = await res.json();
     console.log(responseJson)
+    checkDisable(responseJson);
 
-    $(document).ready(function() {
-        const btnTimeBooking = $('.time-booking button');
-        btnTimeBooking.css('background-color', '#3498DB');
-        btnTimeBooking.prop('disabled', false);
-        btnTimeBooking.each(function() {
-            var btnValue = $(this).text();
-
-            if (responseJson.includes(btnValue)) {
-
-                $(this).prop('disabled', true);
-                $(this).css('background-color', 'red');
-                $(this).addClass('red-button')
-            }
-        });
-
-        btnTimeBooking.on('click', function() {
-            // Đổi màu của nút được click
-            $(this).css('background-color', '#D19F68');
-            $(this).addClass('booking');
-            timeBooking = $(this).text();
-
-            // Vô hiệu hóa các nút khác
-            btnTimeBooking.not(this).not('.red-button').css('background-color', '#3498DB');
-
-            // Vô hiệu hóa các nút có giá trị giống với các phần tử trong mảng res
-
-        });
-    });
 }
+
 
 async function showTimeFreeDate(element) {
     var date = element.value;
@@ -152,36 +146,38 @@ async function showTimeFreeDate(element) {
     console.log(res);
     const responseJson = await res.json();
     console.log(responseJson)
-
-    $(document).ready(function() {
-        const btnTimeBooking = $('.time-booking button');
-        btnTimeBooking.css('background-color', '#3498DB');
-        btnTimeBooking.prop('disabled', false);
-        btnTimeBooking.each(function() {
-            var btnValue = $(this).text();
-
-            if (responseJson.includes(btnValue)) {
-
-                $(this).prop('disabled', true);
-                $(this).css('background-color', 'red');
-                $(this).addClass('red-button')
-            }
-        });
-
-        btnTimeBooking.on('click', function() {
-            // Đổi màu của nút được click
-            $(this).css('background-color', '#D19F68');
-            $(this).addClass('booking');
-            timeBooking = $(this).text();
-
-            // Vô hiệu hóa các nút khác
-            btnTimeBooking.not(this).not('.red-button').css('background-color', '#3498DB');
-
-            // Vô hiệu hóa các nút có giá trị giống với các phần tử trong mảng res
-
-        });
-    });
+    checkDisable(responseJson);
 }
+
+function checkDisable(responseJson){
+
+    // btnTimeBooking.css('background-color', '#3498DB');
+    // btnTimeBooking.prop('disabled', false);
+
+    divTimeButtonRow.empty();
+
+    $.each(timeArr, (index, item) => {
+        const str = renderAllTimeButtons(item)
+        divTimeButtonRow.append(str)
+    })
+
+    const btnTime = $('#div-time-button .btn-time')
+
+    $.each(responseJson, (index, item) => {
+        console.log(item)
+        const indexCurrent = findTimeInArray(item.toString())
+
+        if (indexCurrent >= 0 ) {
+            const str = renderRedButton(item)
+            const elem = $(btnTime[indexCurrent])
+
+            elem.replaceWith(str)
+        }
+    })
+
+    changeColorButtonToYellow()
+}
+
 
 function deleteService(element) {
     // Lấy thẻ div chứa biểu tượng "X"
@@ -225,7 +221,7 @@ let categories;
 let types;
 let rooms = [];
 
-
+var idUser = document.getElementById("idUser").value;
 bookingForm.onsubmit = async (e) => {
     var selectedOptions = [];
     for (var i = 0; i < eSelectedHairDetails.length; i++) {
@@ -244,7 +240,7 @@ bookingForm.onsubmit = async (e) => {
         },
         idHairDetails: selectedOptions,
         timeBooking: timeBooking + ":00",
-        id: bookingSelected.id
+        idUser: idUser
     }
 
     console.log(data)
@@ -256,10 +252,6 @@ bookingForm.onsubmit = async (e) => {
             delay: 2000,
             align: 'topright'
         });
-
-    // await renderTable();
-    // $('#staticBackdrop').modal('hide');
-
 }
 
 function getDataFromForm(form) {
@@ -279,6 +271,80 @@ async function createBooking(data) {
     })
 }
 
+function getCurrentDateTime(timeStr) {
+    const today = new Date().toLocaleDateString('EN', 'yyyy/MM/dd')
+    return new Date(today + " " + timeStr);
+}
+
+function findTimeInArray(timeStr) {
+    return timeArr.findIndex(item => item === timeStr)
+}
+
+function renderAllTimeButtons(timeStr) {
+    // const timeValue = $(this).text().split(":")[0];
+    // const hourValue = parseInt(timeStr, 10);
+
+    const now = getCurrentDateTime(timeStr)
+    const daySelected = document.getElementById('dayBooking')
+    const dayNow = getDayNow();
+
+
+    if (now < new Date().getTime() && daySelected.value === dayNow ) {
+        return `
+        <div class="col-2 btn-time" >
+          <button class="red-button" type="button" disabled>${timeStr}</button>
+        </div>
+    `
+    }
+
+    return `
+        <div class="col-2 btn-time">
+          <button class="green-button" type="button">${timeStr}</button>
+        </div>
+    `
+}
+
+function getDayNow(){
+    // Tạo một đối tượng Date mới
+    var currentDate = new Date();
+
+// Lấy thông tin về năm, tháng và ngày
+    var year = currentDate.getFullYear();
+    var month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Thêm 0 ở trước nếu tháng < 10
+    var day = currentDate.getDate().toString().padStart(2, '0'); // Thêm 0 ở trước nếu ngày < 10
+
+// Tạo chuỗi theo định dạng "YYYY-MM-DD"
+    var formattedDate = year + '-' + month + '-' + day;
+
+    return formattedDate;
+}
+
+function renderRedButton(timeStr) {
+    return `
+        <div class="col-2 btn-time" >
+          <button class="red-button" type="button" disabled>${timeStr}</button>
+        </div>
+    `
+}
+
+
+function changeColorButtonToYellow() {
+
+    $('.btn-time button').on('click', function () {
+        const className = $(this).attr('class')
+        if (className.includes('yellow-button')) {
+            $(this).removeClass('yellow-button').addClass('green-button')
+        }
+        else {
+            if (className.includes('green-button')) {
+                $('.yellow-button').removeClass('yellow-button').addClass('green-button')
+                $(this).removeClass('green-button').addClass('yellow-button')
+                timeBooking = $(this).text();
+            }
+        }
+    })
+
+}
 
 
 

@@ -145,3 +145,4 @@ function onChangeSelect2(selector, value){
     element.val(value);
     element.change();
 }
+

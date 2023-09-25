@@ -54,6 +54,8 @@ public class HomeController {
     public ModelAndView showBookingPage(Authentication authentication) {
 
         ModelAndView view = new ModelAndView("views/booking");
+        view.addObject("hairDetails", hairDetailService.findAll());
+        view.addObject("stylists", stylistService.findAll());
         if(authentication == null){
             return view;
         }
@@ -68,8 +70,7 @@ public class HomeController {
         } else {
             view.addObject("isUser",true);
         }
-        view.addObject("hairDetails", hairDetailService.findAll());
-        view.addObject("stylists", stylistService.findAll());
+
         return view;
     }
 

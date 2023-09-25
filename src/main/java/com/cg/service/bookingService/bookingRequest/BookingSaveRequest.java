@@ -28,6 +28,6 @@ public class BookingSaveRequest {
 
     private SelectOptionRequest stylist;
 
-    private String role;
+    private String idUser;
 
 }

@@ -38,10 +38,12 @@
                 </div>
 
                 <div class="header-right-btn f-right d-none d-lg-block ml-30" th:if="${user == null}">
+                  <input type="hidden" id="idUser">
                   <a href="/login" class="btn header-btn">Login</a>
                 </div>
 
                 <div id="user-info" th:if="${user}">
+                  <input type="hidden" th:value="${user.id}" id="idUser">
                   <img id="user-avatar" src="https://banner2.cleanpng.com/20180714/hxu/kisspng-user-profile-computer-icons-login-clip-art-profile-picture-icon-5b49de2f52aa71.9002514115315676633386.jpg">
                   <div class="dropdown-content" id="dropdown-menu">
                     <th:block th:if="${isAdmin}">

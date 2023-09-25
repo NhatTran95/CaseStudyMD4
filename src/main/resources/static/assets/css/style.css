@@ -139,9 +139,25 @@
 
 .time-booking button {
     width: 100%;
-    background-color: #3498db;
+    /*background-color: #3498db;*/
     color: #ffffff;
     border: none;
     padding: 10px 20px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.red-button {
+    background-color: #e70404;
+    cursor: not-allowed !important;
+}
+
+.green-button {
+    background-color: #3498db;
+    cursor: pointer;
+}
+
+.yellow-button {
+    background-color: #D19F68;
     cursor: pointer;
 }
